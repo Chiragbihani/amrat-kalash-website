@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
+import { useAuth } from '@/lib/auth-context'
 import { getProductById, getVariant } from '@/lib/db'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
@@ -16,6 +17,7 @@ import Link from 'next/link'
 export default function ProductDetailPage() {
   const params = useParams()
   const router = useRouter()
+  const { isAuthenticated, user } = useAuth()
   const productId = params.id as string
   
   const product = getProductById(productId)
@@ -45,6 +47,13 @@ export default function ProductDetailPage() {
   const currentVariant = product.variants.find((v) => v.id === selectedVariant)
 
   const handleAddToCart = async () => {
+    // Check if user is authenticated and is a customer
+    if (!isAuthenticated || user?.role !== 'customer') {
+      toast.error('Please login as a customer to add items to cart')
+      router.push('/auth')
+      return
+    }
+
     if (!selectedVariant) {
       toast.error('Please select a variant')
       return

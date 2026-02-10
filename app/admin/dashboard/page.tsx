@@ -238,31 +238,48 @@ export default function AdminDashboard() {
               <div className="space-y-4">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">Inventory Management</h2>
 
-                {products.map((product) => (
-                  <Card key={product.id} className="border-amber-200">
-                    <CardHeader className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-200">
-                      <CardTitle className="text-amber-900">{product.name}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        {product.variants.map((variant) => (
-                          <Card key={variant.id} className="border-gray-200">
-                            <CardContent className="p-4">
-                              <p className="font-semibold text-gray-900 mb-2">{variant.size}</p>
-                              <p className="text-sm text-gray-600 mb-1">Price: ₹{variant.price}</p>
-                              <p className="text-sm text-gray-600 mb-3">Stock: {variant.stock}</p>
-                              <Link href={`/admin/inventory/${product.id}/${variant.id}`}>
-                                <Button size="sm" className="w-full bg-blue-600 hover:bg-blue-700">
-                                  Update Stock
-                                </Button>
-                              </Link>
-                            </CardContent>
-                          </Card>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                {products.map((product) => {
+                  // Calculate units sold for each variant
+                  const variantSalesMap = new Map<string, number>()
+                  orders.forEach(order => {
+                    order.items.forEach(item => {
+                      if (item.productName === product.name) {
+                        const key = `${item.productName}-${item.variantSize}`
+                        variantSalesMap.set(key, (variantSalesMap.get(key) || 0) + item.quantity)
+                      }
+                    })
+                  })
+
+                  return (
+                    <Card key={product.id} className="border-amber-200">
+                      <CardHeader className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-200">
+                        <CardTitle className="text-amber-900">{product.name}</CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                          {product.variants.map((variant) => {
+                            const unitsSold = variantSalesMap.get(`${product.name}-${variant.size}`) || 0
+                            return (
+                              <Card key={variant.id} className="border-gray-200">
+                                <CardContent className="p-4">
+                                  <p className="font-semibold text-gray-900 mb-2">{variant.size}</p>
+                                  <p className="text-sm text-gray-600 mb-1">Price: ₹{variant.price}</p>
+                                  <p className="text-sm text-gray-600 mb-1">Stock: {variant.stock}</p>
+                                  <p className="text-sm font-semibold text-green-600 mb-3">Units Sold: {unitsSold}</p>
+                                  <Link href={`/admin/products/${product.id}/edit`}>
+                                    <Button size="sm" className="w-full bg-blue-600 hover:bg-blue-700">
+                                      Update Stock/Price
+                                    </Button>
+                                  </Link>
+                                </CardContent>
+                              </Card>
+                            )
+                          })}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )
+                })}
               </div>
             </TabsContent>
 
