@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
-import { getProductById, getVariant } from '@/lib/db'
+import { getProductById } from '@/lib/db'
+import type { Product } from '@/lib/db'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
@@ -20,10 +21,38 @@ export default function ProductDetailPage() {
   const { isAuthenticated, user } = useAuth()
   const productId = params.id as string
   
-  const product = getProductById(productId)
-  const [selectedVariant, setSelectedVariant] = useState(product?.variants[0]?.id || '')
+  const [product, setProduct] = useState<Product | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [selectedVariant, setSelectedVariant] = useState('')
   const [quantity, setQuantity] = useState(1)
   const [isAdding, setIsAdding] = useState(false)
+
+  useEffect(() => {
+    const fetchProduct = () => {
+      const p = getProductById(productId)
+      setProduct(p)
+      if (p) {
+        setSelectedVariant(p.variants[0]?.id || '')
+      }
+      setLoading(false)
+    }
+    fetchProduct()
+  }, [productId])
+
+  if (loading) {
+    return (
+      <main className="min-h-screen flex flex-col">
+        <Header />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mb-4"></div>
+            <p className="text-amber-700">Loading product...</p>
+          </div>
+        </div>
+        <Footer />
+      </main>
+    )
+  }
 
   if (!product) {
     return (

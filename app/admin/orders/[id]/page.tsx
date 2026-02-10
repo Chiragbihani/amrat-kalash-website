@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
 import { getOrderById, updateOrderStatus, sendEmail } from '@/lib/db'
+import type { Order } from '@/lib/db'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
@@ -24,8 +25,15 @@ export default function ManageOrderPage() {
     redirect('/auth')
   }
 
-  const [order, setOrder] = useState(() => getOrderById(orderId))
+  const [order, setOrder] = useState<Order | null>(null)
   const [isUpdating, setIsUpdating] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const o = getOrderById(orderId)
+    setOrder(o)
+    setLoading(false)
+  }, [orderId])
 
   if (!order) {
     return (

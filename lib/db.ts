@@ -59,11 +59,11 @@ export interface Order {
   deliveredAt?: Date
 }
 
-// Initialize database with mock data
-const initializeDB = () => {
-  const existing = localStorage.getItem('amrat_db')
-  if (existing) return JSON.parse(existing)
+// Check if we're in browser environment
+const isBrowser = () => typeof window !== 'undefined'
 
+// Get default database structure (used on server)
+const getDefaultDB = () => {
   const mockProducts: Product[] = [
     {
       id: 'mustard-1',
@@ -182,13 +182,22 @@ const initializeDB = () => {
     },
   ]
 
-  const db = {
+  return {
     products: mockProducts,
     users: mockUsers,
     orders: [] as Order[],
     emails: [] as any[], // Mock email storage
   }
+}
 
+// Initialize database with mock data
+const initializeDB = () => {
+  if (!isBrowser()) return getDefaultDB()
+  
+  const existing = localStorage.getItem('amrat_db')
+  if (existing) return JSON.parse(existing)
+
+  const db = getDefaultDB()
   localStorage.setItem('amrat_db', JSON.stringify(db))
   return db
 }
@@ -196,6 +205,7 @@ const initializeDB = () => {
 // Get the database
 export const getDB = () => {
   try {
+    if (!isBrowser()) return getDefaultDB()
     const db = localStorage.getItem('amrat_db')
     if (!db) return initializeDB()
     return JSON.parse(db)
@@ -206,6 +216,7 @@ export const getDB = () => {
 
 // Save the database
 export const saveDB = (db: any) => {
+  if (!isBrowser()) return
   localStorage.setItem('amrat_db', JSON.stringify(db))
 }
 

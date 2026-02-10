@@ -1,8 +1,10 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { getProducts } from '@/lib/db'
+import type { Product } from '@/lib/db'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -10,7 +12,12 @@ import { ShoppingCart, Leaf } from 'lucide-react'
 import Link from 'next/link'
 
 export default function Products() {
-  const products = getProducts()
+  const [products, setProducts] = useState<Product[]>([])
+
+  useEffect(() => {
+    const p = getProducts()
+    setProducts(p)
+  }, [])
 
   return (
     <main className="min-h-screen flex flex-col">

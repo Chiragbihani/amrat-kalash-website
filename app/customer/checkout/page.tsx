@@ -2,10 +2,11 @@
 
 import React from "react"
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
 import { getProductById, createOrder, updateStock, sendEmail } from '@/lib/db'
+import type { OrderItem } from '@/lib/db'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
@@ -21,9 +22,14 @@ export default function CheckoutPage() {
   const { user, isAuthenticated } = useAuth()
   const router = useRouter()
   const [isProcessing, setIsProcessing] = useState(false)
+  const [cart, setCart] = useState<any[]>(() => {
+    if (typeof window !== 'undefined') {
+      return JSON.parse(localStorage.getItem('amrat_cart') || '[]')
+    }
+    return []
+  })
 
-  // Address form state
-  const [address, setAddress] = useState({
+  const address = useState({
     street: '',
     city: '',
     state: '',
@@ -31,15 +37,7 @@ export default function CheckoutPage() {
     phone: '',
   })
 
-  // Get cart from localStorage
-  const [cart] = useState<any[]>(() => {
-    if (typeof window !== 'undefined') {
-      return JSON.parse(localStorage.getItem('amrat_cart') || '[]')
-    }
-    return []
-  })
-
-  const cartItems = useMemo(() => {
+  const orderItems = useMemo(() => {
     return cart.map((item) => {
       const product = getProductById(item.productId)
       return { ...item, product }
@@ -47,8 +45,8 @@ export default function CheckoutPage() {
   }, [cart])
 
   const subtotal = useMemo(() => {
-    return cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
-  }, [cartItems])
+    return orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  }, [orderItems])
 
   const tax = subtotal * 0.18
   const total = subtotal + tax
@@ -80,7 +78,7 @@ export default function CheckoutPage() {
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setAddress((prev) => ({ ...prev, [name]: value }))
+    setCart((prev) => ({ ...prev, [name]: value }))
   }
 
   const handlePlaceOrder = async (e: React.FormEvent) => {
@@ -105,16 +103,6 @@ export default function CheckoutPage() {
     setIsProcessing(true)
 
     try {
-      // Create order items with product details
-      const orderItems = cartItems.map((item) => ({
-        productId: item.productId,
-        productName: item.productName,
-        variantSize: item.variantSize,
-        quantity: item.quantity,
-        price: item.price,
-        subtotal: item.price * item.quantity,
-      }))
-
       // Create order
       const order = createOrder({
         customerId: user!.id,
@@ -128,7 +116,7 @@ export default function CheckoutPage() {
       })
 
       // Update stock for each item
-      cartItems.forEach((item) => {
+      orderItems.forEach((item) => {
         const product = getProductById(item.productId)
         if (product) {
           const variant = product.variants.find((v) => v.id === item.variantId)
@@ -299,7 +287,7 @@ export default function CheckoutPage() {
                 </CardHeader>
                 <CardContent className="p-6">
                   <div className="space-y-4 mb-6 pb-6 border-b border-amber-200">
-                    {cartItems.map((item) => (
+                    {orderItems.map((item) => (
                       <div key={`${item.productId}-${item.variantId}`}>
                         <div className="flex justify-between items-start gap-2 mb-1">
                           <div className="flex-1">

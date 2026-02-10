@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
 import { getProducts, getOrders } from '@/lib/db'
+import type { Product, Order } from '@/lib/db'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
@@ -18,13 +19,21 @@ export default function AdminDashboard() {
   const { user, isAuthenticated } = useAuth()
   const router = useRouter()
   const [activeTab, setActiveTab] = useState('overview')
+  const [products, setProducts] = useState<Product[]>([])
+  const [orders, setOrders] = useState<Order[]>([])
+  const [loading, setLoading] = useState(true)
 
   if (!isAuthenticated || user?.role !== 'admin') {
     redirect('/auth')
   }
 
-  const products = getProducts()
-  const orders = getOrders()
+  useEffect(() => {
+    const p = getProducts()
+    const o = getOrders()
+    setProducts(p)
+    setOrders(o)
+    setLoading(false)
+  }, [])
 
   // Calculate statistics
   const totalProducts = products.length

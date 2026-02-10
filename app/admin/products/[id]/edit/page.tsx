@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
 import { getProductById, updateProduct, deleteProduct, updatePrice, updateStock } from '@/lib/db'
+import type { Product } from '@/lib/db'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
@@ -21,12 +22,19 @@ export default function EditProductPage() {
   const router = useRouter()
   const productId = params.id as string
 
-  const [editData, setEditData] = useState<any | null>(null)
+  const [editData, setEditData] = useState<Product | null>(null)
   const [isSaving, setIsSaving] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   if (!isAuthenticated || user?.role !== 'admin') {
     redirect('/auth')
   }
+
+  useEffect(() => {
+    const p = getProductById(productId)
+    setEditData(p)
+    setLoading(false)
+  }, [productId])
 
   const product = getProductById(productId)
 

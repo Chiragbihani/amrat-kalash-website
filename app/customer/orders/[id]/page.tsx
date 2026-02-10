@@ -1,8 +1,10 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
 import { getOrderById } from '@/lib/db'
+import type { Order } from '@/lib/db'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
@@ -16,12 +18,33 @@ export default function OrderConfirmationPage() {
   const { user, isAuthenticated } = useAuth()
   const params = useParams()
   const orderId = params.id as string
+  const [order, setOrder] = useState<Order | null>(null)
+  const [loading, setLoading] = useState(true)
 
   if (!isAuthenticated || user?.role !== 'customer') {
     redirect('/auth')
   }
 
-  const order = getOrderById(orderId)
+  useEffect(() => {
+    const o = getOrderById(orderId)
+    setOrder(o)
+    setLoading(false)
+  }, [orderId])
+
+  if (loading) {
+    return (
+      <main className="min-h-screen flex flex-col">
+        <Header />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mb-4"></div>
+            <p className="text-amber-700">Loading order details...</p>
+          </div>
+        </div>
+        <Footer />
+      </main>
+    )
+  }
 
   if (!order) {
     return (

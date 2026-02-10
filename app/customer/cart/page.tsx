@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
 import { getProductById } from '@/lib/db'
@@ -17,12 +17,15 @@ import { redirect } from 'next/navigation'
 export default function CartPage() {
   const { user, isAuthenticated } = useAuth()
   const router = useRouter()
-  const [cart, setCart] = useState<any[]>(() => {
+  const [cart, setCart] = useState<any[]>([])
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
     if (typeof window !== 'undefined') {
-      return JSON.parse(localStorage.getItem('amrat_cart') || '[]')
+      setCart(JSON.parse(localStorage.getItem('amrat_cart') || '[]'))
+      setMounted(true)
     }
-    return []
-  })
+  }, [])
 
   if (!isAuthenticated || user?.role !== 'customer') {
     redirect('/auth')

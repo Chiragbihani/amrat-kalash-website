@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { useAuth } from '@/lib/auth-context'
 import { getEmails } from '@/lib/db'
 import { Header } from '@/components/header'
@@ -14,12 +15,17 @@ import { redirect } from 'next/navigation'
 
 export default function EmailsPage() {
   const { user, isAuthenticated } = useAuth()
+  const [emails, setEmails] = useState<any[]>([])
 
   if (!isAuthenticated || user?.role !== 'admin') {
     redirect('/auth')
   }
 
-  const emails = getEmails()
+  useEffect(() => {
+    const e = getEmails()
+    setEmails(e)
+  }, [])
+
   const customerEmails = emails.filter(e => e.type?.includes('customer'))
   const adminEmails = emails.filter(e => e.type?.includes('admin'))
 
