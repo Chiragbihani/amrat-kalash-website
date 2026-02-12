@@ -24,10 +24,18 @@ export default function AdminDashboard() {
 
   // Check authentication
   useEffect(() => {
-    if (!authLoading && (!isAuthenticated || user?.role !== 'admin')) {
-      router.push('/auth')
+    if (authLoading) return
+
+    if (!user) {
+      router.replace('/auth')
+      return
     }
-  }, [authLoading, isAuthenticated, user, router])
+
+    if (user.role !== 'admin') {
+      router.replace('/')
+    }
+  }, [authLoading, user, router])
+
 
   useEffect(() => {
     if (isAuthenticated && user?.role === 'admin') {
