@@ -14,6 +14,39 @@ import Link from 'next/link'
 import { redirect, useRouter } from 'next/navigation'
 
 export default function EmailsPage() {
+  type EmailItem = {
+    productName: string
+    variantSize: string
+    quantity: number
+    subtotal?: number
+  }
+
+  type EmailAddress = {
+    street: string
+    city: string
+    state: string
+    pincode: string
+  }
+
+  type EmailData = {
+    orderId?: string
+    customerName?: string
+    customerEmail?: string
+    customerPhone?: string
+    status?: string
+    totalAmount?: number
+    items?: EmailItem[]
+    address?: EmailAddress
+  }
+
+  type Email = {
+    type?: string
+    subject: string
+    to: string
+    sentAt: string | number
+    data?: EmailData
+  }
+
   const [emails, setEmails] = useState<Email[]>([])
 
 
