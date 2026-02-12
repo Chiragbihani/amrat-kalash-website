@@ -14,9 +14,23 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
 export default function EmailsPage() {
-  const { user, isAuthenticated } = useAuth()
   const [emails, setEmails] = useState<any[]>([])
 
+  const { user, loading } = useAuth()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (loading) return
+
+    if (!user) {
+      router.replace('/auth')
+      return
+    }
+
+    if (user.role !== 'admin') {
+      router.replace('/')
+    }
+  }, [user, loading, router])
 
 
   useEffect(() => {
