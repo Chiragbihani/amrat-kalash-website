@@ -24,7 +24,7 @@ export default function ManageOrderPage() {
 
 
   useEffect(() => {
-    if (loading) return
+    if (authLoading) return
 
     if (!user) {
       router.replace('/auth')
@@ -35,6 +35,7 @@ export default function ManageOrderPage() {
       router.replace('/')
     }
   }, [user, authLoading, router])
+
 
 
   const [order, setOrder] = useState<Order | null>(null)
