@@ -20,7 +20,8 @@ export default function ManageOrderPage() {
   const router = useRouter()
   const orderId = params.id as string
 
-  const { user, loading } = useAuth()
+  const { user, loading: authLoading } = useAuth()
+
 
   useEffect(() => {
     if (loading) return
