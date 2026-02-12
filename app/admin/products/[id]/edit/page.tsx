@@ -71,7 +71,6 @@ export default function EditProductPage() {
     )
   }
 
-  setEditData(product)
 
   const handleBasicUpdate = async () => {
     setIsSaving(true)
