@@ -19,7 +19,7 @@ export default function ProductDetailPage() {
   const params = useParams()
   const router = useRouter()
   const { isAuthenticated, user } = useAuth()
-  const productId = params.id as string
+  const [productId, setProductId] = useState<string>('')
   
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
@@ -28,6 +28,14 @@ export default function ProductDetailPage() {
   const [isAdding, setIsAdding] = useState(false)
 
   useEffect(() => {
+    if (params?.id) {
+      setProductId(params.id as string)
+    }
+  }, [params])
+
+  useEffect(() => {
+    if (!productId) return
+    
     const fetchProduct = () => {
       const p = getProductById(productId)
       setProduct(p)

@@ -27,6 +27,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Check if user is already logged in on mount
   useEffect(() => {
+    if (typeof window === 'undefined') {
+      setLoading(false)
+      return
+    }
+    
     const storedUser = localStorage.getItem('amrat_user')
     if (storedUser) {
       try {
@@ -49,7 +54,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         role: authUser.role,
       }
       setUser(userData)
-      localStorage.setItem('amrat_user', JSON.stringify(userData))
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('amrat_user', JSON.stringify(userData))
+      }
       return true
     }
     return false
@@ -70,7 +77,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         role: newUser.role,
       }
       setUser(userData)
-      localStorage.setItem('amrat_user', JSON.stringify(userData))
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('amrat_user', JSON.stringify(userData))
+      }
       return true
     } catch {
       return false
@@ -79,7 +88,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = () => {
     setUser(null)
-    localStorage.removeItem('amrat_user')
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('amrat_user')
+    }
   }
 
   return (
