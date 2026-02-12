@@ -1,11 +1,9 @@
 'use client'
 
-import React from "react"
-import { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect } from "react"
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
 import { getProductById, createOrder, updateStock, sendEmail } from '@/lib/db-client'
-import type { OrderItem } from '@/lib/db-client'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
@@ -19,10 +17,12 @@ import Link from 'next/link'
 export default function CheckoutPage() {
   const { user, isAuthenticated, loading } = useAuth()
   const router = useRouter()
+
   const [isProcessing, setIsProcessing] = useState(false)
   const [cart, setCart] = useState<any[]>([])
   const [mounted, setMounted] = useState(false)
 
+  // ✅ Address state properly defined
   const [address, setAddress] = useState({
     street: '',
     city: '',
@@ -31,7 +31,7 @@ export default function CheckoutPage() {
     phone: '',
   })
 
-  // Load cart safely from localStorage
+  // Load cart safely
   useEffect(() => {
     if (typeof window !== 'undefined') {
       try {
@@ -45,7 +45,7 @@ export default function CheckoutPage() {
     }
   }, [])
 
-  // Check authentication
+  // Auth check
   useEffect(() => {
     if (!loading && (!isAuthenticated || user?.role !== 'customer')) {
       router.push('/auth')
@@ -62,7 +62,10 @@ export default function CheckoutPage() {
   }, [cart])
 
   const subtotal = useMemo(() => {
-    return orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+    return orderItems.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    )
   }, [orderItems])
 
   const tax = subtotal * 0.18
@@ -74,7 +77,7 @@ export default function CheckoutPage() {
         <Header />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mb-4"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mb-4"></div>
             <p className="text-amber-700">Loading checkout...</p>
           </div>
         </div>
@@ -91,10 +94,16 @@ export default function CheckoutPage() {
           <Card className="border-amber-200 max-w-md">
             <CardContent className="p-8 text-center">
               <AlertCircle className="w-12 h-12 text-amber-600 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-amber-900 mb-2">Cart is Empty</h2>
-              <p className="text-amber-700 mb-6">Please add items to your cart before checkout</p>
+              <h2 className="text-2xl font-bold text-amber-900 mb-2">
+                Cart is Empty
+              </h2>
+              <p className="text-amber-700 mb-6">
+                Please add items to your cart before checkout
+              </p>
               <Link href="/products">
-                <Button className="bg-amber-600 hover:bg-amber-700">Continue Shopping</Button>
+                <Button className="bg-amber-600 hover:bg-amber-700">
+                  Continue Shopping
+                </Button>
               </Link>
             </CardContent>
           </Card>
@@ -104,8 +113,10 @@ export default function CheckoutPage() {
     )
   }
 
-  // ✅ FIXED: now updates address correctly
-  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // ✅ Correctly updates address (not cart)
+  const handleAddressChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const { name, value } = e.target
     setAddress((prev) => ({ ...prev, [name]: value }))
   }
@@ -113,7 +124,13 @@ export default function CheckoutPage() {
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!address.street || !address.city || !address.state || !address.pincode || !address.phone) {
+    if (
+      !address.street ||
+      !address.city ||
+      !address.state ||
+      !address.pincode ||
+      !address.phone
+    ) {
       toast.error('Please fill in all address details')
       return
     }
@@ -145,9 +162,15 @@ export default function CheckoutPage() {
       orderItems.forEach((item) => {
         const product = getProductById(item.productId)
         if (product) {
-          const variant = product.variants.find((v) => v.id === item.variantId)
+          const variant = product.variants.find(
+            (v) => v.id === item.variantId
+          )
           if (variant) {
-            updateStock(item.productId, item.variantId, variant.stock - item.quantity)
+            updateStock(
+              item.productId,
+              item.variantId,
+              variant.stock - item.quantity
+            )
           }
         }
       })
@@ -192,6 +215,7 @@ export default function CheckoutPage() {
   }
 
 }
+
 
 
 return (
