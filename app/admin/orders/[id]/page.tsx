@@ -34,7 +34,7 @@ export default function ManageOrderPage() {
     if (user.role !== 'admin') {
       router.replace('/')
     }
-  }, [user, loading, router])
+  }, [user, authLoading, router])
 
 
   const [order, setOrder] = useState<Order | null>(null)
