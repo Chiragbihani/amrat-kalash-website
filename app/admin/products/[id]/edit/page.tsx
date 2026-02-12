@@ -42,10 +42,13 @@ export default function EditProductPage() {
 
 
   useEffect(() => {
+    if (!user || user.role !== 'admin') return
+
     const p = getProductById(productId)
     setEditData(p)
     setLoading(false)
-  }, [productId])
+  }, [productId, user])
+
 
   const product = getProductById(productId)
 
