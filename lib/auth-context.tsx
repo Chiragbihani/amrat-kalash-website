@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
-import { authenticateUser, getUserById, createUser } from './db'
+import { authenticateUser, getUserById, createUser } from './db-client'
 
 export interface AuthUser {
   id: string

@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
-import { getProductById } from '@/lib/db'
+import { getProductById } from '@/lib/db-client'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
@@ -12,10 +12,9 @@ import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
 import { Trash2, ShoppingCart, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 
 export default function CartPage() {
-  const { user, isAuthenticated } = useAuth()
+  const { user, isAuthenticated, loading } = useAuth()
   const router = useRouter()
   const [cart, setCart] = useState<any[]>([])
   const [mounted, setMounted] = useState(false)
@@ -27,8 +26,25 @@ export default function CartPage() {
     }
   }, [])
 
-  if (!isAuthenticated || user?.role !== 'customer') {
-    redirect('/auth')
+  useEffect(() => {
+    if (!loading && (!isAuthenticated || user?.role !== 'customer')) {
+      router.push('/auth')
+    }
+  }, [loading, isAuthenticated, user, router])
+
+  if (!mounted || loading || !isAuthenticated) {
+    return (
+      <main className="min-h-screen flex flex-col">
+        <Header />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mb-4"></div>
+            <p className="text-amber-700">Loading...</p>
+          </div>
+        </div>
+        <Footer />
+      </main>
+    )
   }
 
   const cartItems = useMemo(() => {

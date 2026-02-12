@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
-import { getProductById } from '@/lib/db'
-import type { Product } from '@/lib/db'
+import { getProductById } from '@/lib/db-client'
+import type { Product } from '@/lib/db-client'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
@@ -19,7 +19,6 @@ export default function ProductDetailPage() {
   const params = useParams()
   const router = useRouter()
   const { isAuthenticated, user } = useAuth()
-  const [productId, setProductId] = useState<string>('')
   
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
@@ -29,14 +28,7 @@ export default function ProductDetailPage() {
 
   useEffect(() => {
     if (params?.id) {
-      setProductId(params.id as string)
-    }
-  }, [params])
-
-  useEffect(() => {
-    if (!productId) return
-    
-    const fetchProduct = () => {
+      const productId = params.id as string
       const p = getProductById(productId)
       setProduct(p)
       if (p) {
@@ -44,8 +36,7 @@ export default function ProductDetailPage() {
       }
       setLoading(false)
     }
-    fetchProduct()
-  }, [productId])
+  }, [params])
 
   if (loading) {
     return (
@@ -91,6 +82,11 @@ export default function ProductDetailPage() {
       return
     }
 
+    if (!product) {
+      toast.error('Product not found')
+      return
+    }
+
     if (!selectedVariant) {
       toast.error('Please select a variant')
       return
@@ -113,14 +109,14 @@ export default function ProductDetailPage() {
       
       // Check if item already exists in cart
       const existingItem = cart.find(
-        (item: any) => item.productId === productId && item.variantId === selectedVariant
+        (item: any) => item.productId === product.id && item.variantId === selectedVariant
       )
 
       if (existingItem) {
         existingItem.quantity += quantity
       } else {
         cart.push({
-          productId,
+          productId: product.id,
           productName: product.name,
           variantId: selectedVariant,
           variantSize: currentVariant.size,
