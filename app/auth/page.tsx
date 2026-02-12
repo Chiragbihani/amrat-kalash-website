@@ -32,7 +32,7 @@ export default function AuthPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!loginEmail || !loginPassword) {
       toast.error('Please fill in all fields')
       return
@@ -46,7 +46,7 @@ export default function AuthPage() {
         // Redirect to home page after login
         router.push('/')
       }
-      } else {
+      else {
         toast.error('Invalid email or password')
       }
     } catch (error) {
