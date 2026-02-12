@@ -214,7 +214,7 @@ export default function AdminDashboard() {
                       <CardContent className="p-4">
                         <h3 className="font-bold text-amber-900 mb-2">{product.name}</h3>
                         <p className="text-xs text-gray-600 mb-4">{product.description}</p>
-                        
+
                         <div className="mb-4">
                           <p className="text-xs font-semibold text-gray-700 mb-2">Variants:</p>
                           <div className="space-y-1">
@@ -330,7 +330,10 @@ export default function AdminDashboard() {
                               {order.items.map((item, idx) => (
                                 <div key={idx} className="text-sm text-gray-600">
                                   <p>{item.productName} ({item.variantSize})</p>
-                                  <p className="text-gray-500">Qty: {item.quantity} × ₹{item.price} = ₹{item.subtotal.toFixed(2)}</p>
+                                  <p className="text-gray-500">
+                                    Qty: {item.quantity} × ₹{item.price} = ₹{(item.price * item.quantity).toFixed(2)}
+                                  </p>
+
                                 </div>
                               ))}
                             </div>
