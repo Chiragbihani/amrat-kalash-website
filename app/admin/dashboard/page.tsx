@@ -13,27 +13,31 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { BoxIcon, ShoppingCart, Package, TrendingUp, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 
 export default function AdminDashboard() {
-  const { user, isAuthenticated } = useAuth()
+  const { user, isAuthenticated, loading: authLoading } = useAuth()
   const router = useRouter()
   const [activeTab, setActiveTab] = useState('overview')
   const [products, setProducts] = useState<Product[]>([])
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
 
-  if (!isAuthenticated || user?.role !== 'admin') {
-    redirect('/auth')
-  }
+  // Check authentication
+  useEffect(() => {
+    if (!authLoading && (!isAuthenticated || user?.role !== 'admin')) {
+      router.push('/auth')
+    }
+  }, [authLoading, isAuthenticated, user, router])
 
   useEffect(() => {
-    const p = getProducts()
-    const o = getOrders()
-    setProducts(p)
-    setOrders(o)
-    setLoading(false)
-  }, [])
+    if (isAuthenticated && user?.role === 'admin') {
+      const p = getProducts()
+      const o = getOrders()
+      setProducts(p)
+      setOrders(o)
+      setLoading(false)
+    }
+  }, [isAuthenticated, user])
 
   // Calculate statistics
   const totalProducts = products.length

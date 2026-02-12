@@ -16,26 +16,36 @@ import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
 import { AlertCircle, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 
 export default function CheckoutPage() {
-  const { user, isAuthenticated } = useAuth()
+  const { user, isAuthenticated, loading } = useAuth()
   const router = useRouter()
   const [isProcessing, setIsProcessing] = useState(false)
-  const [cart, setCart] = useState<any[]>(() => {
-    if (typeof window !== 'undefined') {
-      return JSON.parse(localStorage.getItem('amrat_cart') || '[]')
-    }
-    return []
-  })
-
-  const address = useState({
+  const [cart, setCart] = useState<any[]>([])
+  const [mounted, setMounted] = useState(false)
+  
+  const [address, setAddress] = useState({
     street: '',
     city: '',
     state: '',
     pincode: '',
     phone: '',
   })
+
+  // Load cart from localStorage on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setCart(JSON.parse(localStorage.getItem('amrat_cart') || '[]'))
+      setMounted(true)
+    }
+  }, [])
+
+  // Check authentication
+  useEffect(() => {
+    if (!loading && (!isAuthenticated || user?.role !== 'customer')) {
+      router.push('/auth')
+    }
+  }, [loading, isAuthenticated, user, router])
 
   const orderItems = useMemo(() => {
     return cart.map((item) => {
@@ -51,8 +61,20 @@ export default function CheckoutPage() {
   const tax = subtotal * 0.18
   const total = subtotal + tax
 
-  if (!isAuthenticated || user?.role !== 'customer') {
-    redirect('/auth')
+  // Loading state
+  if (!mounted || loading || !isAuthenticated) {
+    return (
+      <main className="min-h-screen flex flex-col">
+        <Header />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mb-4"></div>
+            <p className="text-amber-700">Loading checkout...</p>
+          </div>
+        </div>
+        <Footer />
+      </main>
+    )
   }
 
   if (cart.length === 0) {

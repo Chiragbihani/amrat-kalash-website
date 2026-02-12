@@ -98,7 +98,7 @@ export default function Home() {
               <div className="p-6">
                 <h3 className="text-xl font-bold text-amber-900 mb-2">Mustard Oil</h3>
                 <p className="text-sm text-amber-700 mb-4">Rich, pungent flavor with traditional cooking benefits.</p>
-                <Link href="/products">
+                <Link href="/products/info">
                   <Button variant="outline" className="w-full border-amber-600 text-amber-600 bg-transparent">
                     Learn More
                   </Button>
@@ -113,7 +113,7 @@ export default function Home() {
               <div className="p-6">
                 <h3 className="text-xl font-bold text-amber-900 mb-2">Groundnut Oil</h3>
                 <p className="text-sm text-amber-700 mb-4">Light, nutty flavor perfect for all cuisines.</p>
-                <Link href="/products">
+                <Link href="/products/info">
                   <Button variant="outline" className="w-full border-amber-600 text-amber-600 bg-transparent">
                     Learn More
                   </Button>
@@ -128,7 +128,7 @@ export default function Home() {
               <div className="p-6">
                 <h3 className="text-xl font-bold text-amber-900 mb-2">Sunflower Oil</h3>
                 <p className="text-sm text-amber-700 mb-4">Light and healthy for everyday cooking needs.</p>
-                <Link href="/products">
+                <Link href="/products/info">
                   <Button variant="outline" className="w-full border-amber-600 text-amber-600 bg-transparent">
                     Learn More
                   </Button>

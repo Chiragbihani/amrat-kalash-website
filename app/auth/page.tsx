@@ -43,13 +43,9 @@ export default function AuthPage() {
       const success = await login(loginEmail, loginPassword)
       if (success) {
         toast.success('Logged in successfully!')
-        // Redirect based on user type
-        const adminEmails = ['admin@amratkalash.com']
-        if (adminEmails.includes(loginEmail)) {
-          router.push('/admin/dashboard')
-        } else {
-          router.push('/customer/shop')
-        }
+        // Redirect to home page after login
+        router.push('/')
+      }
       } else {
         toast.error('Invalid email or password')
       }
