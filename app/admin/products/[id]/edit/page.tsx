@@ -17,7 +17,6 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
 export default function EditProductPage() {
-  const { user, isAuthenticated } = useAuth()
   const params = useParams()
   const router = useRouter()
   const productId = params.id as string
@@ -26,9 +25,21 @@ export default function EditProductPage() {
   const [isSaving, setIsSaving] = useState(false)
   const [loading, setLoading] = useState(true)
 
-  if (!isAuthenticated || user?.role !== 'admin') {
-    redirect('/auth')
-  }
+  const { user, loading } = useAuth()
+
+  useEffect(() => {
+    if (loading) return
+
+    if (!user) {
+      router.replace('/auth')
+      return
+    }
+
+    if (user.role !== 'admin') {
+      router.replace('/')
+    }
+  }, [user, loading, router])
+
 
   useEffect(() => {
     const p = getProductById(productId)
