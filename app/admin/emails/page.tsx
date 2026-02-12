@@ -242,7 +242,7 @@ export default function EmailsPage() {
                                 <strong>Items:</strong>
                                 <ul className="ml-4 mt-1">
                                   {email.data.items.map((item, i) => (
-                                    <li key={i}>{item.productName} ({item.variantSize}) x {item.quantity} = ₹{item.subtotal.toFixed(2)}</li>
+                                    <li key={i}>{item.productName} ({item.variantSize}) x {item.quantity} = ₹{(item.subtotal ?? 0).toFixed(2)}</li>
                                   ))}
                                 </ul>
                               </div>
