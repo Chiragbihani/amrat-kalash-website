@@ -17,9 +17,7 @@ export default function EmailsPage() {
   const { user, isAuthenticated } = useAuth()
   const [emails, setEmails] = useState<any[]>([])
 
-  if (!isAuthenticated || user?.role !== 'admin') {
-    redirect('/auth')
-  }
+
 
   useEffect(() => {
     const e = getEmails()
