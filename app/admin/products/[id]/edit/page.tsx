@@ -25,10 +25,10 @@ export default function EditProductPage() {
   const [isSaving, setIsSaving] = useState(false)
   const [loading, setLoading] = useState(true)
 
-  const { user, loading } = useAuth()
+  const { user, loading: authLoading } = useAuth()
 
   useEffect(() => {
-    if (loading) return
+    if (authLoading) return
 
     if (!user) {
       router.replace('/auth')
@@ -38,7 +38,8 @@ export default function EditProductPage() {
     if (user.role !== 'admin') {
       router.replace('/')
     }
-  }, [user, loading, router])
+  }, [user, authLoading, router])
+
 
 
   useEffect(() => {
@@ -48,6 +49,7 @@ export default function EditProductPage() {
     setEditData(p)
     setLoading(false)
   }, [productId, user])
+
 
 
   const product = getProductById(productId)
