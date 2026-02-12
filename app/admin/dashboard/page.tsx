@@ -38,14 +38,16 @@ export default function AdminDashboard() {
 
 
   useEffect(() => {
-    if (isAuthenticated && user?.role === 'admin') {
-      const p = getProducts()
-      const o = getOrders()
-      setProducts(p)
-      setOrders(o)
-      setLoading(false)
-    }
-  }, [isAuthenticated, user])
+    if (authLoading) return
+    if (!user || user.role !== 'admin') return
+
+    const p = getProducts()
+    const o = getOrders()
+    setProducts(p)
+    setOrders(o)
+    setLoading(false)
+  }, [authLoading, user])
+
 
   // Calculate statistics
   const totalProducts = products.length
