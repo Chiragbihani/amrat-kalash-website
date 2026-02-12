@@ -43,9 +43,16 @@ export default function AuthPage() {
       const success = await login(loginEmail, loginPassword)
       if (success) {
         toast.success('Logged in successfully!')
-        // Redirect to home page after login
-        router.push('/')
+
+        const user = JSON.parse(localStorage.getItem('user') || '{}')
+
+        if (user?.role === 'admin') {
+          router.replace('/admin/dashboard')
+        } else {
+          router.replace('/customer/shop')
+        }
       }
+
       else {
         toast.error('Invalid email or password')
       }
