@@ -34,9 +34,12 @@ export default function EmailsPage() {
 
 
   useEffect(() => {
+    if (!user || user.role !== 'admin') return
+
     const e = getEmails()
     setEmails(e)
-  }, [])
+  }, [user])
+
 
   const customerEmails = emails.filter(e => e.type?.includes('customer'))
   const adminEmails = emails.filter(e => e.type?.includes('admin'))
