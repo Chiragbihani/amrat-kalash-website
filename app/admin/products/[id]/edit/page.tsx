@@ -70,6 +70,7 @@ export default function EditProductPage() {
       </main>
     )
   }
+  if (!editData) return null
 
 
   const handleBasicUpdate = async () => {
