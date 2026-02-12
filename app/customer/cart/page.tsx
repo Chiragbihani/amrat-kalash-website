@@ -19,6 +19,7 @@ export default function CartPage() {
   const [cart, setCart] = useState<any[]>([])
   const [mounted, setMounted] = useState(false)
 
+  // All hooks must be defined before any conditional logic
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setCart(JSON.parse(localStorage.getItem('amrat_cart') || '[]'))
@@ -32,6 +33,18 @@ export default function CartPage() {
     }
   }, [loading, isAuthenticated, user, router])
 
+  const cartItems = useMemo(() => {
+    return cart.map((item) => {
+      const product = getProductById(item.productId)
+      return { ...item, product }
+    })
+  }, [cart])
+
+  const total = useMemo(() => {
+    return cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  }, [cartItems])
+
+  // Now conditional rendering is safe since all hooks are called
   if (!mounted || loading || !isAuthenticated) {
     return (
       <main className="min-h-screen flex flex-col">
@@ -46,17 +59,6 @@ export default function CartPage() {
       </main>
     )
   }
-
-  const cartItems = useMemo(() => {
-    return cart.map((item) => {
-      const product = getProductById(item.productId)
-      return { ...item, product }
-    })
-  }, [cart])
-
-  const total = useMemo(() => {
-    return cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
-  }, [cartItems])
 
   const updateQuantity = (productId: string, variantId: string, quantity: number) => {
     const updatedCart = cart.map((item) => {
