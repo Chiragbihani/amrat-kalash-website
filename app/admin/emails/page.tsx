@@ -14,7 +14,8 @@ import Link from 'next/link'
 import { redirect, useRouter } from 'next/navigation'
 
 export default function EmailsPage() {
-  const [emails, setEmails] = useState<any[]>([])
+  const [emails, setEmails] = useState<Email[]>([])
+
 
   const { user, loading } = useAuth()
   const router = useRouter()
