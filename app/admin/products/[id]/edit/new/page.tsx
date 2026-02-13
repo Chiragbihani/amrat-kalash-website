@@ -11,7 +11,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from 'sonner'
-import { v4 as uuidv4 } from 'uuid'
 
 export default function NewProductPage() {
   const { user, loading: authLoading } = useAuth()
