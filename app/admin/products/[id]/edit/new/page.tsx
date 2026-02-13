@@ -58,7 +58,7 @@ export default function NewProductPage() {
     setIsSaving(true)
 
     const newProduct: Product = {
-      id: uuidv4(),
+      id: crypto.randomUUID(),
       name: formData.name,
       description: formData.description,
       image: formData.image,
@@ -68,7 +68,7 @@ export default function NewProductPage() {
       usage: formData.usage,
       variants: [
         {
-          id: uuidv4(),
+          id: crypto.randomUUID(),
           size: 'Default',
           price: parseFloat(formData.price),
           stock: parseInt(formData.stock) || 0
