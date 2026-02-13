@@ -213,7 +213,7 @@ export default function AdminDashboard() {
               <div className="space-y-4">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-2xl font-bold text-gray-900">Products Management</h2>
-                  <Link href="admin/products/new">
+                  <Link href="app/admin/products/[id]/edit/new/page.tsx">
                     <Button className="bg-green-600 hover:bg-green-700">Add New Product</Button>
                   </Link>
                 </div>
