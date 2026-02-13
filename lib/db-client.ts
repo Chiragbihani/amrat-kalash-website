@@ -125,3 +125,10 @@ export const getUserById = (id: string) => {
 
 export { saveDB, getDB }
 export type { Product, Order, User, OrderItem }
+
+export function createProduct(product: Product) {
+  const products = getProducts()
+  const updatedProducts = [...products, product]
+  localStorage.setItem('products', JSON.stringify(updatedProducts))
+}
+
