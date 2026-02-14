@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
-import { getProductById } from '@/lib/db'
+import { getProductById } from '@/lib/db-client'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
@@ -12,14 +12,14 @@ import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
 import { Trash2, ShoppingCart, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 
 export default function CartPage() {
-  const { user, isAuthenticated } = useAuth()
+  const { user, isAuthenticated, loading } = useAuth()
   const router = useRouter()
   const [cart, setCart] = useState<any[]>([])
   const [mounted, setMounted] = useState(false)
 
+  // All hooks must be defined before any conditional logic
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setCart(JSON.parse(localStorage.getItem('amrat_cart') || '[]'))
@@ -27,9 +27,11 @@ export default function CartPage() {
     }
   }, [])
 
-  if (!isAuthenticated || user?.role !== 'customer') {
-    redirect('/auth')
-  }
+  useEffect(() => {
+    if (!loading && (!isAuthenticated || user?.role !== 'customer')) {
+      router.push('/auth')
+    }
+  }, [loading, isAuthenticated, user, router])
 
   const cartItems = useMemo(() => {
     return cart.map((item) => {
@@ -41,6 +43,22 @@ export default function CartPage() {
   const total = useMemo(() => {
     return cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
   }, [cartItems])
+
+  // Now conditional rendering is safe since all hooks are called
+  if (!mounted || loading || !isAuthenticated) {
+    return (
+      <main className="min-h-screen flex flex-col">
+        <Header />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mb-4"></div>
+            <p className="text-amber-700">Loading...</p>
+          </div>
+        </div>
+        <Footer />
+      </main>
+    )
+  }
 
   const updateQuantity = (productId: string, variantId: string, quantity: number) => {
     const updatedCart = cart.map((item) => {

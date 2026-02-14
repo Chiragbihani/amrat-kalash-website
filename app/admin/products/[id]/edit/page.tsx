@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
-import { getProductById, updateProduct, deleteProduct, updatePrice, updateStock } from '@/lib/db'
-import type { Product } from '@/lib/db'
+import { getProductById, updateProduct, deleteProduct, updatePrice, updateStock } from '@/lib/db-client'
+import type { Product } from '@/lib/db-client'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
@@ -17,7 +17,6 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
 export default function EditProductPage() {
-  const { user, isAuthenticated } = useAuth()
   const params = useParams()
   const router = useRouter()
   const productId = params.id as string
@@ -26,15 +25,32 @@ export default function EditProductPage() {
   const [isSaving, setIsSaving] = useState(false)
   const [loading, setLoading] = useState(true)
 
-  if (!isAuthenticated || user?.role !== 'admin') {
-    redirect('/auth')
-  }
+  const { user, loading: authLoading } = useAuth()
 
   useEffect(() => {
+    if (authLoading) return
+
+    if (!user) {
+      router.replace('/auth')
+      return
+    }
+
+    if (user.role !== 'admin') {
+      router.replace('/')
+    }
+  }, [user, authLoading, router])
+
+
+
+  useEffect(() => {
+    if (!user || user.role !== 'admin') return
+
     const p = getProductById(productId)
     setEditData(p)
     setLoading(false)
-  }, [productId])
+  }, [productId, user])
+
+
 
   const product = getProductById(productId)
 
@@ -54,8 +70,8 @@ export default function EditProductPage() {
       </main>
     )
   }
+  if (!editData) return null
 
-  setEditData(product)
 
   const handleBasicUpdate = async () => {
     setIsSaving(true)

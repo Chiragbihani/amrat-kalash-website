@@ -2,6 +2,7 @@ import React from "react"
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { AuthProvider } from '@/lib/auth-context'
+import { ProductProvider } from '@/lib/product-context'
 import { Toaster } from '@/components/ui/toaster'
 
 import './globals.css'
@@ -24,8 +25,10 @@ export default function RootLayout({
     <html lang="en">
       <body className="font-sans antialiased">
         <AuthProvider>
-          {children}
-          <Toaster />
+          <ProductProvider>
+            {children}
+            <Toaster />
+          </ProductProvider>
         </AuthProvider>
       </body>
     </html>

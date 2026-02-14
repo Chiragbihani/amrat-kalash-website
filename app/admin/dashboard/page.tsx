@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
-import { getProducts, getOrders } from '@/lib/db'
-import type { Product, Order } from '@/lib/db'
+import { getProducts, getOrders } from '@/lib/db-client'
+import type { Product, Order } from '@/lib/db-client'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
@@ -13,27 +13,41 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { BoxIcon, ShoppingCart, Package, TrendingUp, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 
 export default function AdminDashboard() {
-  const { user, isAuthenticated } = useAuth()
+  const { user, isAuthenticated, loading: authLoading } = useAuth()
   const router = useRouter()
   const [activeTab, setActiveTab] = useState('overview')
   const [products, setProducts] = useState<Product[]>([])
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
 
-  if (!isAuthenticated || user?.role !== 'admin') {
-    redirect('/auth')
-  }
+  // Check authentication
+  useEffect(() => {
+    if (authLoading) return
+
+    if (!user) {
+      router.replace('/auth')
+      return
+    }
+
+    if (user.role !== 'admin') {
+      router.replace('/')
+    }
+  }, [authLoading, user, router])
+
 
   useEffect(() => {
+    if (authLoading) return
+    if (!user || user.role !== 'admin') return
+
     const p = getProducts()
     const o = getOrders()
     setProducts(p)
     setOrders(o)
     setLoading(false)
-  }, [])
+  }, [authLoading, user])
+
 
   // Calculate statistics
   const totalProducts = products.length
@@ -204,13 +218,13 @@ export default function AdminDashboard() {
                   </Link>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
                   {products.map((product) => (
                     <Card key={product.id} className="border-amber-200">
                       <CardContent className="p-4">
                         <h3 className="font-bold text-amber-900 mb-2">{product.name}</h3>
                         <p className="text-xs text-gray-600 mb-4">{product.description}</p>
-                        
+
                         <div className="mb-4">
                           <p className="text-xs font-semibold text-gray-700 mb-2">Variants:</p>
                           <div className="space-y-1">
@@ -326,7 +340,10 @@ export default function AdminDashboard() {
                               {order.items.map((item, idx) => (
                                 <div key={idx} className="text-sm text-gray-600">
                                   <p>{item.productName} ({item.variantSize})</p>
-                                  <p className="text-gray-500">Qty: {item.quantity} × ₹{item.price} = ₹{item.subtotal.toFixed(2)}</p>
+                                  <p className="text-gray-500">
+                                    Qty: {item.quantity} × ₹{item.price} = ₹{(item.price * item.quantity).toFixed(2)}
+                                  </p>
+
                                 </div>
                               ))}
                             </div>

@@ -1,12 +1,9 @@
 'use client'
 
-import React from "react"
-
-import { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect } from "react"
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
-import { getProductById, createOrder, updateStock, sendEmail } from '@/lib/db'
-import type { OrderItem } from '@/lib/db'
+import { getProductById, createOrder, updateStock, sendEmail } from '@/lib/db-client'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
@@ -16,20 +13,17 @@ import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
 import { AlertCircle, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 
 export default function CheckoutPage() {
-  const { user, isAuthenticated } = useAuth()
+  const { user, isAuthenticated, loading } = useAuth()
   const router = useRouter()
-  const [isProcessing, setIsProcessing] = useState(false)
-  const [cart, setCart] = useState<any[]>(() => {
-    if (typeof window !== 'undefined') {
-      return JSON.parse(localStorage.getItem('amrat_cart') || '[]')
-    }
-    return []
-  })
 
-  const address = useState({
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [cart, setCart] = useState<any[]>([])
+  const [mounted, setMounted] = useState(false)
+
+  // ✅ Address state properly defined
+  const [address, setAddress] = useState({
     street: '',
     city: '',
     state: '',
@@ -37,7 +31,30 @@ export default function CheckoutPage() {
     phone: '',
   })
 
+  // Load cart safely
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = localStorage.getItem('amrat_cart')
+        const parsed = stored ? JSON.parse(stored) : []
+        setCart(Array.isArray(parsed) ? parsed : [])
+      } catch {
+        setCart([])
+      }
+      setMounted(true)
+    }
+  }, [])
+
+  // Auth check
+  useEffect(() => {
+    if (!loading && (!isAuthenticated || user?.role !== 'customer')) {
+      router.push('/auth')
+    }
+  }, [loading, isAuthenticated, user, router])
+
   const orderItems = useMemo(() => {
+    if (!Array.isArray(cart)) return []
+
     return cart.map((item) => {
       const product = getProductById(item.productId)
       return { ...item, product }
@@ -45,17 +62,31 @@ export default function CheckoutPage() {
   }, [cart])
 
   const subtotal = useMemo(() => {
-    return orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+    return orderItems.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    )
   }, [orderItems])
 
   const tax = subtotal * 0.18
   const total = subtotal + tax
 
-  if (!isAuthenticated || user?.role !== 'customer') {
-    redirect('/auth')
+  if (!mounted || loading || !isAuthenticated) {
+    return (
+      <main className="min-h-screen flex flex-col">
+        <Header />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mb-4"></div>
+            <p className="text-amber-700">Loading checkout...</p>
+          </div>
+        </div>
+        <Footer />
+      </main>
+    )
   }
 
-  if (cart.length === 0) {
+  if (!Array.isArray(cart) || cart.length === 0) {
     return (
       <main className="min-h-screen flex flex-col">
         <Header />
@@ -63,10 +94,16 @@ export default function CheckoutPage() {
           <Card className="border-amber-200 max-w-md">
             <CardContent className="p-8 text-center">
               <AlertCircle className="w-12 h-12 text-amber-600 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-amber-900 mb-2">Cart is Empty</h2>
-              <p className="text-amber-700 mb-6">Please add items to your cart before checkout</p>
+              <h2 className="text-2xl font-bold text-amber-900 mb-2">
+                Cart is Empty
+              </h2>
+              <p className="text-amber-700 mb-6">
+                Please add items to your cart before checkout
+              </p>
               <Link href="/products">
-                <Button className="bg-amber-600 hover:bg-amber-700">Continue Shopping</Button>
+                <Button className="bg-amber-600 hover:bg-amber-700">
+                  Continue Shopping
+                </Button>
               </Link>
             </CardContent>
           </Card>
@@ -76,16 +113,24 @@ export default function CheckoutPage() {
     )
   }
 
-  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // ✅ Correctly updates address (not cart)
+  const handleAddressChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const { name, value } = e.target
-    setCart((prev) => ({ ...prev, [name]: value }))
+    setAddress((prev) => ({ ...prev, [name]: value }))
   }
 
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Validation
-    if (!address.street || !address.city || !address.state || !address.pincode || !address.phone) {
+    if (
+      !address.street ||
+      !address.city ||
+      !address.state ||
+      !address.pincode ||
+      !address.phone
+    ) {
       toast.error('Please fill in all address details')
       return
     }
@@ -103,7 +148,6 @@ export default function CheckoutPage() {
     setIsProcessing(true)
 
     try {
-      // Create order
       const order = createOrder({
         customerId: user!.id,
         customerEmail: user!.email,
@@ -115,18 +159,22 @@ export default function CheckoutPage() {
         paymentMethod: 'cod',
       })
 
-      // Update stock for each item
       orderItems.forEach((item) => {
         const product = getProductById(item.productId)
         if (product) {
-          const variant = product.variants.find((v) => v.id === item.variantId)
+          const variant = product.variants.find(
+            (v) => v.id === item.variantId
+          )
           if (variant) {
-            updateStock(item.productId, item.variantId, variant.stock - item.quantity)
+            updateStock(
+              item.productId,
+              item.variantId,
+              variant.stock - item.quantity
+            )
           }
         }
       })
 
-      // Send confirmation email to customer
       sendEmail({
         to: user!.email,
         subject: 'Order Confirmation - Amrat Kalash',
@@ -140,7 +188,6 @@ export default function CheckoutPage() {
         },
       })
 
-      // Send order notification to admin
       sendEmail({
         to: 'admin@amratkalash.com',
         subject: `New Order Received - ${order.id}`,

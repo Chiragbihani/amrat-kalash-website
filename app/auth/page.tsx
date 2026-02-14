@@ -32,7 +32,7 @@ export default function AuthPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!loginEmail || !loginPassword) {
       toast.error('Please fill in all fields')
       return
@@ -43,14 +43,17 @@ export default function AuthPage() {
       const success = await login(loginEmail, loginPassword)
       if (success) {
         toast.success('Logged in successfully!')
-        // Redirect based on user type
-        const adminEmails = ['admin@amratkalash.com']
-        if (adminEmails.includes(loginEmail)) {
-          router.push('/admin/dashboard')
+
+        const user = JSON.parse(localStorage.getItem('user') || '{}')
+
+        if (user?.role === 'admin') {
+          router.replace('/admin/dashboard')
         } else {
-          router.push('/customer/shop')
+          router.replace('/customer/shop')
         }
-      } else {
+      }
+
+      else {
         toast.error('Invalid email or password')
       }
     } catch (error) {

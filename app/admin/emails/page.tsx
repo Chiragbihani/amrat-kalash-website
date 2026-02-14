@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/lib/auth-context'
-import { getEmails } from '@/lib/db'
+import { getEmails } from '@/lib/db-client'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
@@ -11,20 +11,69 @@ import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Mail, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 
 export default function EmailsPage() {
-  const { user, isAuthenticated } = useAuth()
-  const [emails, setEmails] = useState<any[]>([])
-
-  if (!isAuthenticated || user?.role !== 'admin') {
-    redirect('/auth')
+  type EmailItem = {
+    productName: string
+    variantSize: string
+    quantity: number
+    subtotal?: number
   }
 
+  type EmailAddress = {
+    street: string
+    city: string
+    state: string
+    pincode: string
+  }
+
+  type EmailData = {
+    orderId?: string
+    customerName?: string
+    customerEmail?: string
+    customerPhone?: string
+    status?: string
+    totalAmount?: number
+    items?: EmailItem[]
+    address?: EmailAddress
+  }
+
+  type Email = {
+    type?: string
+    subject: string
+    to: string
+    sentAt: string | number
+    data?: EmailData
+  }
+
+  const [emails, setEmails] = useState<Email[]>([])
+
+
+  const { user, loading } = useAuth()
+  const router = useRouter()
+
   useEffect(() => {
+    if (loading) return
+
+    if (!user) {
+      router.replace('/auth')
+      return
+    }
+
+    if (user.role !== 'admin') {
+      router.replace('/')
+    }
+  }, [user, loading, router])
+
+
+  useEffect(() => {
+    if (!user || user.role !== 'admin') return
+
     const e = getEmails()
     setEmails(e)
-  }, [])
+  }, [user])
+
 
   const customerEmails = emails.filter(e => e.type?.includes('customer'))
   const adminEmails = emails.filter(e => e.type?.includes('admin'))
@@ -193,7 +242,7 @@ export default function EmailsPage() {
                                 <strong>Items:</strong>
                                 <ul className="ml-4 mt-1">
                                   {email.data.items.map((item, i) => (
-                                    <li key={i}>{item.productName} ({item.variantSize}) x {item.quantity} = ₹{item.subtotal.toFixed(2)}</li>
+                                    <li key={i}>{item.productName} ({item.variantSize}) x {item.quantity} = ₹{(item.subtotal ?? 0).toFixed(2)}</li>
                                   ))}
                                 </ul>
                               </div>

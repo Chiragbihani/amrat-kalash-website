@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
-import { getOrderById, updateOrderStatus, sendEmail } from '@/lib/db'
-import type { Order } from '@/lib/db'
+import { getOrderById, updateOrderStatus, sendEmail } from '@/lib/db-client'
+import type { Order } from '@/lib/db-client'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
@@ -16,24 +16,41 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
 export default function ManageOrderPage() {
-  const { user, isAuthenticated } = useAuth()
   const params = useParams()
   const router = useRouter()
   const orderId = params.id as string
 
-  if (!isAuthenticated || user?.role !== 'admin') {
-    redirect('/auth')
-  }
+  const { user, loading: authLoading } = useAuth()
+
+
+  useEffect(() => {
+    if (authLoading) return
+
+    if (!user) {
+      router.replace('/auth')
+      return
+    }
+
+    if (user.role !== 'admin') {
+      router.replace('/')
+    }
+  }, [user, authLoading, router])
+
+
 
   const [order, setOrder] = useState<Order | null>(null)
   const [isUpdating, setIsUpdating] = useState(false)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (!user || user.role !== 'admin') return
+
     const o = getOrderById(orderId)
     setOrder(o)
     setLoading(false)
-  }, [orderId])
+  }, [orderId, user])
+
+
 
   if (!order) {
     return (

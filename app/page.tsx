@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Leaf, Shield, Droplets, Sprout } from 'lucide-react'
 import Link from 'next/link'
+import { productThemes } from '@/lib/product-themes'
+import type { ProductType } from '@/lib/product-themes'
 
 export default function Home() {
   return (
@@ -86,55 +88,196 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Best Sellers Section */}
+      {/* Premium Oils Collection */}
       <section className="bg-amber-50 py-16 md:py-20">
         <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center text-amber-900 mb-12">Our Best Sellers</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="h-48 bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center">
-                <Droplets className="w-20 h-20 text-white opacity-50" />
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-amber-900 mb-2">Mustard Oil</h3>
-                <p className="text-sm text-amber-700 mb-4">Rich, pungent flavor with traditional cooking benefits.</p>
-                <Link href="/products">
-                  <Button variant="outline" className="w-full border-amber-600 text-amber-600 bg-transparent">
-                    Learn More
-                  </Button>
-                </Link>
-              </div>
-            </div>
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-amber-900 mb-12">Our Premium Oils Collection</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Double Filter Groundnut Oil */}
+            {(() => {
+              const theme = productThemes.groundnut
+              return (
+                <div 
+                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                  style={{ borderTop: `4px solid ${theme.primary}` }}
+                >
+                  <div 
+                    className="h-48 flex items-center justify-center"
+                    style={{ background: `linear-gradient(to bottom right, ${theme.primary}, ${theme.secondary})` }}
+                  >
+                    <Droplets className="w-20 h-20 text-white opacity-50" />
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold mb-2" style={{ color: theme.primary }}>Double Filter Groundnut Oil</h3>
+                    <p className="text-sm mb-4" style={{ color: theme.secondary }}>Premium quality groundnut oil with superior purity and nutty flavor.</p>
+                    <Link href="/products/info/groundnut">
+                      <Button 
+                        variant="outline" 
+                        className="w-full"
+                        style={{ borderColor: theme.primary, color: theme.primary }}
+                      >
+                        Learn More
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              )
+            })()}
 
-            <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="h-48 bg-gradient-to-br from-amber-300 to-yellow-400 flex items-center justify-center">
-                <Droplets className="w-20 h-20 text-white opacity-50" />
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-amber-900 mb-2">Groundnut Oil</h3>
-                <p className="text-sm text-amber-700 mb-4">Light, nutty flavor perfect for all cuisines.</p>
-                <Link href="/products">
-                  <Button variant="outline" className="w-full border-amber-600 text-amber-600 bg-transparent">
-                    Learn More
-                  </Button>
-                </Link>
-              </div>
-            </div>
+            {/* Refined Soybean Oil */}
+            {(() => {
+              const theme = productThemes.soybean
+              return (
+                <div 
+                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                  style={{ borderTop: `4px solid ${theme.primary}` }}
+                >
+                  <div 
+                    className="h-48 flex items-center justify-center"
+                    style={{ background: `linear-gradient(to bottom right, ${theme.primary}, ${theme.secondary})` }}
+                  >
+                    <Droplets className="w-20 h-20 text-white opacity-50" />
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold mb-2" style={{ color: theme.primary }}>Refined Soybean Oil</h3>
+                    <p className="text-sm mb-4" style={{ color: theme.secondary }}>Rich in omega-3 and omega-6 fatty acids for healthy living.</p>
+                    <Link href="/products/info/soybean">
+                      <Button 
+                        variant="outline" 
+                        className="w-full"
+                        style={{ borderColor: theme.primary, color: theme.primary }}
+                      >
+                        Learn More
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              )
+            })()}
 
-            <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="h-48 bg-gradient-to-br from-yellow-300 to-amber-400 flex items-center justify-center">
-                <Droplets className="w-20 h-20 text-white opacity-50" />
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-amber-900 mb-2">Sunflower Oil</h3>
-                <p className="text-sm text-amber-700 mb-4">Light and healthy for everyday cooking needs.</p>
-                <Link href="/products">
-                  <Button variant="outline" className="w-full border-amber-600 text-amber-600 bg-transparent">
-                    Learn More
-                  </Button>
-                </Link>
-              </div>
-            </div>
+            {/* Refined Groundnut Oil */}
+            {(() => {
+              const theme = productThemes.groundnut
+              return (
+                <div 
+                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                  style={{ borderTop: `4px solid ${theme.primary}` }}
+                >
+                  <div 
+                    className="h-48 flex items-center justify-center"
+                    style={{ background: `linear-gradient(to bottom right, ${theme.primary}, ${theme.secondary})` }}
+                  >
+                    <Droplets className="w-20 h-20 text-white opacity-50" />
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold mb-2" style={{ color: theme.primary }}>Refined Groundnut Oil</h3>
+                    <p className="text-sm mb-4" style={{ color: theme.secondary }}>Pure refined groundnut oil for all your culinary needs.</p>
+                    <Link href="/products/info/groundnut">
+                      <Button 
+                        variant="outline" 
+                        className="w-full"
+                        style={{ borderColor: theme.primary, color: theme.primary }}
+                      >
+                        Learn More
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              )
+            })()}
+
+            {/* Refined Palm Oil */}
+            {(() => {
+              const theme = productThemes.sunflower
+              return (
+                <div 
+                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                  style={{ borderTop: `4px solid ${theme.primary}` }}
+                >
+                  <div 
+                    className="h-48 flex items-center justify-center"
+                    style={{ background: `linear-gradient(to bottom right, ${theme.primary}, ${theme.secondary})` }}
+                  >
+                    <Droplets className="w-20 h-20 text-white opacity-50" />
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold mb-2" style={{ color: theme.primary }}>Refined Palm Oil</h3>
+                    <p className="text-sm mb-4" style={{ color: theme.secondary }}>Sustainable palm oil with natural goodness.</p>
+                    <Link href="/products/info/sunflower">
+                      <Button 
+                        variant="outline" 
+                        className="w-full"
+                        style={{ borderColor: theme.primary, color: theme.primary }}
+                      >
+                        Learn More
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              )
+            })()}
+
+            {/* Refined Cotton Seed Oil */}
+            {(() => {
+              const theme = productThemes.cottonseed
+              return (
+                <div 
+                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                  style={{ borderTop: `4px solid ${theme.primary}` }}
+                >
+                  <div 
+                    className="h-48 flex items-center justify-center"
+                    style={{ background: `linear-gradient(to bottom right, ${theme.primary}, ${theme.secondary})` }}
+                  >
+                    <Droplets className="w-20 h-20 text-white opacity-50" />
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold mb-2" style={{ color: theme.primary }}>Refined Cotton Seed Oil</h3>
+                    <p className="text-sm mb-4" style={{ color: theme.secondary }}>Premium cotton seed oil with excellent cooking properties.</p>
+                    <Link href="/products/info/cottonseed">
+                      <Button 
+                        variant="outline" 
+                        className="w-full"
+                        style={{ borderColor: theme.primary, color: theme.primary }}
+                      >
+                        Learn More
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              )
+            })()}
+
+            {/* Mustard Oil */}
+            {(() => {
+              const theme = productThemes.mustard
+              return (
+                <div 
+                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                  style={{ borderTop: `4px solid ${theme.primary}` }}
+                >
+                  <div 
+                    className="h-48 flex items-center justify-center"
+                    style={{ background: `linear-gradient(to bottom right, ${theme.primary}, ${theme.secondary})` }}
+                  >
+                    <Droplets className="w-20 h-20 text-white opacity-50" />
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold mb-2" style={{ color: theme.primary }}>Mustard Oil</h3>
+                    <p className="text-sm mb-4" style={{ color: theme.secondary }}>Traditional pungent mustard oil with authentic flavor.</p>
+                    <Link href="/products/info/mustard">
+                      <Button 
+                        variant="outline" 
+                        className="w-full"
+                        style={{ borderColor: theme.primary, color: theme.primary }}
+                      >
+                        Learn More
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              )
+            })()}
           </div>
         </div>
       </section>

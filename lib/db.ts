@@ -10,7 +10,7 @@ export interface ProductVariant {
 export interface Product {
   id: string
   name: string
-  type: 'mustard' | 'groundnut' | 'sunflower' | 'soybean'
+  type: 'mustard' | 'groundnut' | 'sunflower' | 'soybean' | 'cottonseed' | 'palm'
   description: string
   image: string
   ingredients: string[]
@@ -158,6 +158,54 @@ const getDefaultDB = () => {
         { id: 'soybean-1l', size: '1L', price: 340, stock: 110 },
         { id: 'soybean-5l', size: '5L', price: 1600, stock: 35 },
         { id: 'soybean-10l', size: '10L', price: 2900, stock: 18 },
+      ],
+      createdAt: new Date(),
+    },
+    {
+      id: 'cottonseed-1',
+      name: 'Refined Cotton Seed Oil',
+      type: 'cottonseed',
+      description: 'Premium refined cotton seed oil with excellent cooking properties and light texture',
+      image: '/oil-cottonseed.jpg',
+      ingredients: ['100% Pure Cotton Seeds', 'Refined & Purified', 'High Smoke Point'],
+      benefits: [
+        'Rich in antioxidants',
+        'High smoke point for cooking',
+        'Light and neutral flavor',
+        'Good for deep frying',
+        'Supports cardiovascular health',
+      ],
+      usage: 'Perfect for deep frying, baking, and industrial cooking. Suitable for high-temperature cooking.',
+      videoUrl: 'https://example.com/videos/cottonseed-oil.mp4',
+      variants: [
+        { id: 'cottonseed-250ml', size: '250ml', price: 115, stock: 45 },
+        { id: 'cottonseed-1l', size: '1L', price: 360, stock: 100 },
+        { id: 'cottonseed-5l', size: '5L', price: 1700, stock: 38 },
+        { id: 'cottonseed-10l', size: '10L', price: 3100, stock: 16 },
+      ],
+      createdAt: new Date(),
+    },
+    {
+      id: 'palm-1',
+      name: 'Refined Palm Oil',
+      type: 'palm',
+      description: 'Sustainable refined palm oil with rich golden color and smooth texture',
+      image: '/oil-palm.jpg',
+      ingredients: ['100% Pure Palm Fruit', 'Sustainably Sourced', 'Naturally Golden'],
+      benefits: [
+        'Rich in beta-carotene',
+        'Promotes healthy cholesterol levels',
+        'Good for skin and hair',
+        'Natural source of vitamin E',
+        'Suitable for all cuisines',
+      ],
+      usage: 'Excellent for cooking, frying, and baking. Works well with traditional and modern cuisines.',
+      videoUrl: 'https://example.com/videos/palm-oil.mp4',
+      variants: [
+        { id: 'palm-250ml', size: '250ml', price: 125, stock: 40 },
+        { id: 'palm-1l', size: '1L', price: 370, stock: 95 },
+        { id: 'palm-5l', size: '5L', price: 1750, stock: 32 },
+        { id: 'palm-10l', size: '10L', price: 3200, stock: 14 },
       ],
       createdAt: new Date(),
     },
