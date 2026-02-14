@@ -126,7 +126,6 @@ export const getUserById = (id: string) => {
 }
 
 export { saveDB, getDB }
-export type { Product, Order, User, OrderItem }
 
 export function createProduct(product: Product) {
   const products = getProducts()
