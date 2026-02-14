@@ -5,6 +5,9 @@ import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { getProducts } from '@/lib/db-client'
 import type { Product } from '@/lib/db-client'
+import { useProductTheme } from '@/lib/product-context'
+import type { ProductType } from '@/lib/product-themes'
+import { productThemes } from '@/lib/product-themes'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -13,46 +16,97 @@ import Link from 'next/link'
 
 export default function Products() {
   const [products, setProducts] = useState<Product[]>([])
+  const { selectedProduct, setSelectedProduct, theme } = useProductTheme()
 
   useEffect(() => {
     const p = getProducts()
     setProducts(p)
   }, [])
 
+  const handleProductSelect = (productId: string) => {
+    const product = products.find(p => p.id === productId)
+    if (product && product.type in productThemes) {
+      setSelectedProduct(product.type as ProductType)
+    }
+  }
+
   return (
     <main className="min-h-screen flex flex-col">
       <Header />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-amber-50 to-orange-50 py-12 md:py-16">
+      <section className={`py-12 md:py-16 transition-all duration-500 ${
+        theme ? `bg-gradient-to-r ${theme.bgGradient}` : 'bg-gradient-to-r from-amber-50 to-orange-50'
+      }`}>
         <div className="max-w-6xl mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-amber-900 mb-4 text-pretty">Our Premium Oil Collection</h1>
-          <p className="text-lg text-amber-800">Discover the finest quality oils, carefully selected and processed for your family's health and taste.</p>
+          <h1 className={`text-4xl md:text-5xl font-bold mb-4 text-pretty transition-colors ${
+            theme ? theme.textPrimary : 'text-amber-900'
+          }`}>Our Premium Oil Collection</h1>
+          <p className={`text-lg transition-colors ${
+            theme ? theme.textSecondary : 'text-amber-800'
+          }`}>Discover the finest quality oils, carefully selected and processed for your family's health and taste.</p>
         </div>
       </section>
 
       {/* Products Grid */}
-      <section className="py-16 md:py-20">
+      <section className={`py-16 md:py-20 transition-colors duration-500 ${
+        theme ? theme.cardBg : 'bg-white'
+      }`}>
         <div className="max-w-6xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {products.map((product) => (
-              <Card key={product.id} className="border-amber-100 overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="h-48 bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+            {products.map((product) => {
+              const productTheme = productThemes[product.type as ProductType]
+              const isSelected = selectedProduct === product.type
+              
+              return (
+              <Card 
+                key={product.id}
+                onClick={() => handleProductSelect(product.id)}
+                className={`overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer border-2 ${
+                  isSelected 
+                    ? `border-[${productTheme.primary}] shadow-lg scale-105` 
+                    : `border-${productTheme.borderColor} hover:scale-102`
+                }`}
+                style={{
+                  borderColor: isSelected ? productTheme.primary : undefined,
+                  backgroundColor: isSelected ? productTheme.cardBg : 'white',
+                }}
+              >
+                <div 
+                  className="h-48 flex items-center justify-center transition-all"
+                  style={{
+                    background: `linear-gradient(to bottom right, ${productTheme.primary}, ${productTheme.secondary})`,
+                  }}
+                >
                   <Leaf className="w-16 h-16 text-white opacity-30" />
                 </div>
                 <CardContent className="p-4">
-                  <Badge className="bg-amber-100 text-amber-800 mb-2">
+                  <Badge 
+                    className="mb-2 transition-colors"
+                    style={{
+                      backgroundColor: productTheme.primary + '20',
+                      color: productTheme.primary,
+                    }}
+                  >
                     {product.type.charAt(0).toUpperCase() + product.type.slice(1)}
                   </Badge>
-                  <h3 className="font-bold text-amber-900 mb-2">{product.name}</h3>
-                  <p className="text-xs text-amber-700 mb-4 line-clamp-2">{product.description}</p>
+                  <h3 className={`font-bold mb-2 transition-colors ${productTheme.textPrimary}`}>{product.name}</h3>
+                  <p className={`text-xs mb-4 line-clamp-2 transition-colors ${productTheme.textSecondary}`}>{product.description}</p>
                   
                   {/* Variants */}
                   <div className="mb-4">
-                    <p className="text-xs font-semibold text-amber-900 mb-2">Available Sizes:</p>
+                    <p className={`text-xs font-semibold mb-2 ${productTheme.textPrimary}`}>Available Sizes:</p>
                     <div className="flex flex-wrap gap-1">
                       {product.variants.map((variant) => (
-                        <Badge key={variant.id} variant="outline" className="text-xs border-amber-300 text-amber-700">
+                        <Badge 
+                          key={variant.id} 
+                          variant="outline" 
+                          className="text-xs"
+                          style={{
+                            borderColor: productTheme.primary,
+                            color: productTheme.primary,
+                          }}
+                        >
                           {variant.size}
                         </Badge>
                       ))}
@@ -61,18 +115,26 @@ export default function Products() {
 
                   {/* Price Range */}
                   <div className="mb-4">
-                    <p className="text-xs text-amber-700">From ₹{Math.min(...product.variants.map(v => v.price))}</p>
+                    <p className={`text-xs ${productTheme.textSecondary}`}>From ₹{Math.min(...product.variants.map(v => v.price))}</p>
                   </div>
 
                   <Link href={`/products/${product.id}`} className="w-full">
-                    <Button className="w-full bg-amber-600 hover:bg-amber-700 text-white text-sm">
+                    <Button 
+                      className="w-full text-white text-sm transition-all"
+                      style={{
+                        backgroundColor: productTheme.primary,
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = productTheme.secondary}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = productTheme.primary}
+                    >
                       <ShoppingCart className="w-4 h-4 mr-1" />
                       View Details
                     </Button>
                   </Link>
                 </CardContent>
               </Card>
-            ))}
+              )
+            })}
           </div>
         </div>
       </section>

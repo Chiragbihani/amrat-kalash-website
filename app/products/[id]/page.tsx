@@ -3,8 +3,10 @@
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
+import { useProductTheme } from '@/lib/product-context'
+import { productThemes } from '@/lib/product-themes'
 import { getProductById } from '@/lib/db-client'
-import type { Product } from '@/lib/db-client'
+import type { Product, ProductType } from '@/lib/db-client'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
@@ -19,6 +21,7 @@ export default function ProductDetailPage() {
   const params = useParams()
   const router = useRouter()
   const { isAuthenticated, user } = useAuth()
+  const { setSelectedProduct, theme } = useProductTheme()
   
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
@@ -33,10 +36,14 @@ export default function ProductDetailPage() {
       setProduct(p)
       if (p) {
         setSelectedVariant(p.variants[0]?.id || '')
+        // Set the theme based on product type
+        if (p.type in productThemes) {
+          setSelectedProduct(p.type as ProductType)
+        }
       }
       setLoading(false)
     }
-  }, [params])
+  }, [params, setSelectedProduct])
 
   if (loading) {
     return (
@@ -44,8 +51,11 @@ export default function ProductDetailPage() {
         <Header />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mb-4"></div>
-            <p className="text-amber-700">Loading product...</p>
+            <div 
+              className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 mb-4"
+              style={{ borderColor: theme?.primary || '#EA580C' }}
+            ></div>
+            <p style={{ color: theme?.secondary || '#EA580C' }}>Loading product...</p>
           </div>
         </div>
         <Footer />
@@ -59,11 +69,11 @@ export default function ProductDetailPage() {
         <Header />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <AlertCircle className="w-12 h-12 text-amber-600 mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-amber-900 mb-2">Product Not Found</h1>
-            <p className="text-amber-700 mb-6">The product you're looking for doesn't exist.</p>
+            <AlertCircle className="w-12 h-12 mx-auto mb-4" style={{ color: theme?.primary || '#EA580C' }} />
+            <h1 className="text-2xl font-bold mb-2" style={{ color: theme?.textPrimary || 'text-amber-900' }}>Product Not Found</h1>
+            <p className="mb-6" style={{ color: theme?.textSecondary || 'text-amber-700' }}>The product you're looking for doesn't exist.</p>
             <Link href="/products">
-              <Button className="bg-amber-600 hover:bg-amber-700">Back to Products</Button>
+              <Button style={{ backgroundColor: theme?.primary || '#EA580C' }}>Back to Products</Button>
             </Link>
           </div>
         </div>
