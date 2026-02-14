@@ -25,7 +25,9 @@ import {
   saveDB,
 } from './db'
 import type { Product, Order, User, OrderItem } from './db'
-export type { Product, Order, User, OrderItem } from './db'
+
+// Re-export types for convenience  
+export type { Product, Order, User, OrderItem }
 export type { ProductType } from './product-themes'
 
 // Ensure we're in browser
