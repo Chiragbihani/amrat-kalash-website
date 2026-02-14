@@ -25,6 +25,8 @@ import {
   saveDB,
 } from './db'
 import type { Product, Order, User, OrderItem } from './db'
+export type { Product, Order, User, OrderItem } from './db'
+export type { ProductType } from './product-themes'
 
 // Ensure we're in browser
 const ensureBrowser = () => {

@@ -55,21 +55,19 @@ export default function Products() {
         <div className="max-w-6xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {products.map((product) => {
-              const productTheme = productThemes[product.type as ProductType]
+              const productTheme = productThemes[product.type as ProductType] || productThemes.groundnut
               const isSelected = selectedProduct === product.type
               
               return (
               <Card 
                 key={product.id}
                 onClick={() => handleProductSelect(product.id)}
-                className={`overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer border-2 ${
-                  isSelected 
-                    ? `border-[${productTheme.primary}] shadow-lg scale-105` 
-                    : `border-${productTheme.borderColor} hover:scale-102`
-                }`}
+                className="overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer border-2"
                 style={{
-                  borderColor: isSelected ? productTheme.primary : undefined,
+                  borderColor: isSelected ? productTheme.primary : '#E5E7EB',
                   backgroundColor: isSelected ? productTheme.cardBg : 'white',
+                  transform: isSelected ? 'scale(1.05)' : 'scale(1)',
+                  boxShadow: isSelected ? '0 10px 15px -3px rgba(0, 0, 0, 0.1)' : 'none',
                 }}
               >
                 <div 
@@ -84,18 +82,18 @@ export default function Products() {
                   <Badge 
                     className="mb-2 transition-colors"
                     style={{
-                      backgroundColor: productTheme.primary + '20',
+                      backgroundColor: productTheme.primary + '33',
                       color: productTheme.primary,
                     }}
                   >
                     {product.type.charAt(0).toUpperCase() + product.type.slice(1)}
                   </Badge>
-                  <h3 className={`font-bold mb-2 transition-colors ${productTheme.textPrimary}`}>{product.name}</h3>
-                  <p className={`text-xs mb-4 line-clamp-2 transition-colors ${productTheme.textSecondary}`}>{product.description}</p>
+                  <h3 className="font-bold mb-2 transition-colors" style={{ color: productTheme.primary }}>{product.name}</h3>
+                  <p className="text-xs mb-4 line-clamp-2 transition-colors" style={{ color: productTheme.secondary }}>{product.description}</p>
                   
                   {/* Variants */}
                   <div className="mb-4">
-                    <p className={`text-xs font-semibold mb-2 ${productTheme.textPrimary}`}>Available Sizes:</p>
+                    <p className="text-xs font-semibold mb-2" style={{ color: productTheme.primary }}>Available Sizes:</p>
                     <div className="flex flex-wrap gap-1">
                       {product.variants.map((variant) => (
                         <Badge 
@@ -115,7 +113,7 @@ export default function Products() {
 
                   {/* Price Range */}
                   <div className="mb-4">
-                    <p className={`text-xs ${productTheme.textSecondary}`}>From ₹{Math.min(...product.variants.map(v => v.price))}</p>
+                    <p className="text-xs" style={{ color: productTheme.secondary }}>From ₹{Math.min(...product.variants.map(v => v.price))}</p>
                   </div>
 
                   <Link href={`/products/${product.id}`} className="w-full">

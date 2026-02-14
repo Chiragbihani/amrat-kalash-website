@@ -36,9 +36,10 @@ export default function ProductDetailPage() {
       setProduct(p)
       if (p) {
         setSelectedVariant(p.variants[0]?.id || '')
-        // Set the theme based on product type
-        if (p.type in productThemes) {
-          setSelectedProduct(p.type as ProductType)
+        // Set the theme based on product type - cast to the correct ProductType
+        const productType = p.type as any
+        if (productType in productThemes) {
+          setSelectedProduct(productType)
         }
       }
       setLoading(false)
@@ -149,21 +150,26 @@ export default function ProductDetailPage() {
     <main className="min-h-screen flex flex-col">
       <Header />
 
-      <div className="flex-1 bg-amber-50 py-8">
+      <div className="flex-1 py-8" style={{ backgroundColor: theme ? theme.cardBg : '#FEF3C7' }}>
         <div className="max-w-6xl mx-auto px-4">
           {/* Breadcrumb */}
-          <div className="flex items-center gap-2 mb-8 text-sm text-amber-700">
-            <Link href="/" className="hover:text-amber-900">Home</Link>
+          <div className="flex items-center gap-2 mb-8 text-sm" style={{ color: theme?.secondary || '#B45309' }}>
+            <Link href="/" className="hover:underline" style={{ color: theme?.secondary || '#B45309' }}>Home</Link>
             <span>/</span>
-            <Link href="/products" className="hover:text-amber-900">Products</Link>
+            <Link href="/products" className="hover:underline" style={{ color: theme?.secondary || '#B45309' }}>Products</Link>
             <span>/</span>
-            <span className="text-amber-900 font-medium">{product.name}</span>
+            <span className="font-medium" style={{ color: theme?.primary || '#EA580C' }}>{product.name}</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             {/* Product Image */}
             <div>
-              <div className="bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg h-96 flex items-center justify-center sticky top-8">
+              <div 
+                className="rounded-lg h-96 flex items-center justify-center sticky top-8"
+                style={{
+                  background: theme ? `linear-gradient(to bottom right, ${theme.primary}, ${theme.secondary})` : 'linear-gradient(to bottom right, #FBBF24, #F97316)',
+                }}
+              >
                 <Droplets className="w-32 h-32 text-white opacity-30" />
               </div>
             </div>
@@ -171,31 +177,42 @@ export default function ProductDetailPage() {
             {/* Product Details */}
             <div>
               <div className="mb-6">
-                <Badge className="bg-amber-100 text-amber-800 mb-2">
+                <Badge 
+                  className="mb-2"
+                  style={{
+                    backgroundColor: theme ? theme.primary + '33' : '#FCA5A5',
+                    color: theme?.primary || '#EA580C',
+                  }}
+                >
                   {product.type.charAt(0).toUpperCase() + product.type.slice(1)} Oil
                 </Badge>
-                <h1 className="text-4xl font-bold text-amber-900 mb-2">{product.name}</h1>
-                <p className="text-amber-700 text-lg">{product.description}</p>
+                <h1 className="text-4xl font-bold mb-2" style={{ color: theme?.primary || '#EA580C' }}>{product.name}</h1>
+                <p className="text-lg" style={{ color: theme?.secondary || '#B45309' }}>{product.description}</p>
               </div>
 
               {/* Variant Selection */}
-              <Card className="border-amber-200 mb-6">
+              <Card 
+                className="mb-6"
+                style={{
+                  borderColor: theme?.primary || '#EA580C',
+                }}
+              >
                 <CardContent className="p-6">
-                  <h3 className="font-semibold text-amber-900 mb-4">Select Size</h3>
+                  <h3 className="font-semibold mb-4" style={{ color: theme?.primary || '#EA580C' }}>Select Size</h3>
                   <div className="grid grid-cols-2 gap-3">
                     {product.variants.map((variant) => (
                       <button
                         key={variant.id}
                         onClick={() => setSelectedVariant(variant.id)}
-                        className={`p-4 border-2 rounded-lg transition-all ${
-                          selectedVariant === variant.id
-                            ? 'border-amber-600 bg-amber-50'
-                            : 'border-amber-200 hover:border-amber-400'
-                        }`}
+                        className="p-4 border-2 rounded-lg transition-all"
+                        style={{
+                          borderColor: selectedVariant === variant.id ? theme?.primary || '#EA580C' : '#E5E7EB',
+                          backgroundColor: selectedVariant === variant.id ? theme ? theme.cardBg : '#FEF3C7' : 'white',
+                        }}
                       >
-                        <div className="font-semibold text-amber-900">{variant.size}</div>
-                        <div className="text-amber-600">₹{variant.price}</div>
-                        <div className="text-xs text-amber-700 mt-1">
+                        <div className="font-semibold" style={{ color: theme?.primary || '#EA580C' }}>{variant.size}</div>
+                        <div style={{ color: theme?.secondary || '#B45309' }}>₹{variant.price}</div>
+                        <div className="text-xs mt-1" style={{ color: theme?.secondary || '#B45309' }}>
                           {variant.stock > 0 ? `${variant.stock} in stock` : 'Out of stock'}
                         </div>
                       </button>
@@ -206,13 +223,16 @@ export default function ProductDetailPage() {
 
               {/* Quantity */}
               <div className="mb-6">
-                <label className="block text-sm font-semibold text-amber-900 mb-3">Quantity</label>
+                <label className="block text-sm font-semibold mb-3" style={{ color: theme?.primary || '#EA580C' }}>Quantity</label>
                 <div className="flex items-center gap-2">
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="border-amber-300"
+                    style={{
+                      borderColor: theme?.primary || '#EA580C',
+                      color: theme?.primary || '#EA580C',
+                    }}
                   >
                     −
                   </Button>
@@ -220,13 +240,20 @@ export default function ProductDetailPage() {
                     type="number"
                     value={quantity}
                     onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                    className="w-16 text-center border border-amber-300 rounded px-2 py-1"
+                    style={{
+                      borderColor: theme?.primary || '#EA580C',
+                      color: theme?.primary || '#EA580C',
+                    }}
+                    className="w-16 text-center border rounded px-2 py-1"
                   />
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => setQuantity(quantity + 1)}
-                    className="border-amber-300"
+                    style={{
+                      borderColor: theme?.primary || '#EA580C',
+                      color: theme?.primary || '#EA580C',
+                    }}
                   >
                     +
                   </Button>
@@ -237,27 +264,49 @@ export default function ProductDetailPage() {
               <Button
                 onClick={handleAddToCart}
                 disabled={isAdding || !currentVariant || currentVariant.stock === 0}
-                className="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 mb-4"
+                className="w-full text-white py-3 mb-4"
                 size="lg"
+                style={{
+                  backgroundColor: theme?.primary || '#EA580C',
+                }}
+                onMouseEnter={(e) => {
+                  if (!e.currentTarget.disabled) {
+                    e.currentTarget.style.backgroundColor = theme?.secondary || '#FB923C'
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = theme?.primary || '#EA580C'
+                }}
               >
                 <ShoppingCart className="w-5 h-5 mr-2" />
                 {isAdding ? 'Adding...' : 'Add to Cart'}
               </Button>
 
               {currentVariant && currentVariant.stock === 0 && (
-                <div className="p-3 bg-orange-50 border border-orange-300 rounded-lg text-orange-800 text-sm">
+                <div 
+                  className="p-3 border rounded-lg text-sm"
+                  style={{
+                    backgroundColor: theme?.primary + '20' || '#FCA5A5',
+                    borderColor: theme?.primary || '#EA580C',
+                    color: theme?.primary || '#EA580C',
+                  }}
+                >
                   This variant is currently out of stock
                 </div>
               )}
 
               {/* Ingredients Section */}
-              <Card className="border-amber-200">
+              <Card 
+                style={{
+                  borderColor: theme?.primary || '#EA580C',
+                }}
+              >
                 <CardContent className="p-6">
-                  <h3 className="font-semibold text-amber-900 mb-3">Ingredients</h3>
+                  <h3 className="font-semibold mb-3" style={{ color: theme?.primary || '#EA580C' }}>Ingredients</h3>
                   <ul className="space-y-2">
                     {product.ingredients.map((ingredient, index) => (
-                      <li key={index} className="text-amber-700 text-sm flex items-start gap-2">
-                        <Leaf className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                      <li key={index} className="text-sm flex items-start gap-2" style={{ color: theme?.secondary || '#B45309' }}>
+                        <Leaf className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: theme?.primary || '#EA580C' }} />
                         {ingredient}
                       </li>
                     ))}
@@ -270,18 +319,30 @@ export default function ProductDetailPage() {
           {/* Benefits & Usage Tabs */}
           <div className="mt-12">
             <Tabs defaultValue="benefits" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
+              <TabsList 
+                className="grid w-full grid-cols-2"
+                style={{
+                  backgroundColor: theme ? theme.cardBg : '#FEF3C7',
+                }}
+              >
                 <TabsTrigger value="benefits">Health Benefits</TabsTrigger>
                 <TabsTrigger value="usage">How to Use</TabsTrigger>
               </TabsList>
 
               <TabsContent value="benefits" className="mt-6">
-                <Card className="border-amber-200">
+                <Card 
+                  style={{
+                    borderColor: theme?.primary || '#EA580C',
+                  }}
+                >
                   <CardContent className="p-6">
                     <ul className="space-y-3">
                       {product.benefits.map((benefit, index) => (
-                        <li key={index} className="flex items-start gap-3 text-amber-700">
-                          <div className="w-2 h-2 bg-amber-600 rounded-full mt-2 flex-shrink-0" />
+                        <li key={index} className="flex items-start gap-3" style={{ color: theme?.secondary || '#B45309' }}>
+                          <div 
+                            className="w-2 h-2 rounded-full mt-2 flex-shrink-0" 
+                            style={{ backgroundColor: theme?.primary || '#EA580C' }}
+                          />
                           {benefit}
                         </li>
                       ))}
@@ -291,9 +352,13 @@ export default function ProductDetailPage() {
               </TabsContent>
 
               <TabsContent value="usage" className="mt-6">
-                <Card className="border-amber-200">
+                <Card 
+                  style={{
+                    borderColor: theme?.primary || '#EA580C',
+                  }}
+                >
                   <CardContent className="p-6">
-                    <p className="text-amber-700 leading-relaxed text-lg">{product.usage}</p>
+                    <p className="leading-relaxed text-lg" style={{ color: theme?.secondary || '#B45309' }}>{product.usage}</p>
                   </CardContent>
                 </Card>
               </TabsContent>

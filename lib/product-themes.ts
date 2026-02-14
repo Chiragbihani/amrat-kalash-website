@@ -1,4 +1,4 @@
-export type ProductType = 'groundnut' | 'soybean' | 'palm' | 'cottonseed' | 'mustard'
+export type ProductType = 'groundnut' | 'soybean' | 'sunflower' | 'cottonseed' | 'mustard'
 
 export interface ProductTheme {
   primary: string
@@ -38,17 +38,17 @@ export const productThemes: Record<ProductType, ProductTheme> = {
     buttonBg: 'bg-green-600 hover:bg-green-700',
     buttonHover: 'hover:bg-green-100',
   },
-  palm: {
-    primary: '#1E3A8A',           // deep blue
-    secondary: '#3B82F6',         // bright blue
-    accent: '#2563EB',            // blue
-    bgGradient: 'from-blue-50 to-cyan-50',
-    cardBg: 'bg-blue-50',
-    textPrimary: 'text-blue-900',
-    textSecondary: 'text-blue-700',
-    borderColor: 'border-blue-300',
-    buttonBg: 'bg-blue-600 hover:bg-blue-700',
-    buttonHover: 'hover:bg-blue-100',
+  sunflower: {
+    primary: '#EAB308',           // sunny yellow
+    secondary: '#FBBF24',         // bright amber
+    accent: '#F59E0B',            // amber
+    bgGradient: 'from-yellow-50 to-amber-50',
+    cardBg: 'bg-yellow-50',
+    textPrimary: 'text-yellow-900',
+    textSecondary: 'text-yellow-700',
+    borderColor: 'border-yellow-300',
+    buttonBg: 'bg-yellow-500 hover:bg-yellow-600',
+    buttonHover: 'hover:bg-yellow-100',
   },
   cottonseed: {
     primary: '#6D28D9',           // deep purple
