@@ -1,4 +1,4 @@
-export type ProductType = 'groundnut' | 'soybean' | 'sunflower' | 'cottonseed' | 'mustard'
+export type ProductType = 'groundnut' | 'soybean' | 'sunflower' | 'cottonseed' | 'mustard' | 'palm'
 
 export interface ProductTheme {
   primary: string

@@ -218,7 +218,7 @@ export default function AdminDashboard() {
                   </Link>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
                   {products.map((product) => (
                     <Card key={product.id} className="border-amber-200">
                       <CardContent className="p-4">

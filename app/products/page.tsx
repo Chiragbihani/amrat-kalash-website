@@ -52,8 +52,8 @@ export default function Products() {
       <section className={`py-16 md:py-20 transition-colors duration-500 ${
         theme ? theme.cardBg : 'bg-white'
       }`}>
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
             {products.map((product) => {
               const productTheme = productThemes[product.type as ProductType] || productThemes.groundnut
               const isSelected = selectedProduct === product.type
