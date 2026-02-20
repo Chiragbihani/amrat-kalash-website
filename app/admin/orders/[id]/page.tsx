@@ -193,10 +193,10 @@ export default function ManageOrderPage() {
                             <p className="font-semibold text-gray-900">{item.productName}</p>
                             <p className="text-sm text-gray-600">{item.variantSize}</p>
                           </div>
-                          <p className="font-semibold text-gray-900">₹{item.price}</p>
+                          <p className="font-semibold text-gray-900">₹{(item.price || 0).toFixed(2)}</p>
                         </div>
                         <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
-                        <p className="text-sm font-medium text-gray-900">Subtotal: ₹{item.subtotal.toFixed(2)}</p>
+                        <p className="text-sm font-medium text-gray-900">Subtotal: ₹{((item.subtotal || item.price * item.quantity) || 0).toFixed(2)}</p>
                       </div>
                     ))}
                   </div>

@@ -45,20 +45,34 @@ export default function CheckoutPage() {
     }
   }, [])
 
-  // Auth check
+  // Auth check (only redirect if definitely not authenticated)
   useEffect(() => {
-    if (!loading && (!isAuthenticated || user?.role !== 'customer')) {
+    if (loading) return // Don't do anything while loading
+    
+    if (!isAuthenticated || user?.role !== 'customer') {
       router.push('/auth')
     }
-  }, [loading, isAuthenticated, user, router])
+  }, [loading, isAuthenticated, user?.role, router])
 
   const orderItems = useMemo(() => {
     if (!Array.isArray(cart)) return []
 
     return cart.map((item) => {
       const product = getProductById(item.productId)
-      return { ...item, product }
-    })
+      if (!product) return null
+      
+      const variant = product.variants.find((v) => v.id === item.variantId)
+      if (!variant) return null
+      
+      return {
+        productId: item.productId,
+        productName: product.name,
+        variantSize: variant.size,
+        quantity: item.quantity,
+        price: item.price,
+        subtotal: item.price * item.quantity,
+      }
+    }).filter((item) => item !== null)
   }, [cart])
 
   const subtotal = useMemo(() => {

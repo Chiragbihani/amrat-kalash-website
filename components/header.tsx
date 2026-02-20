@@ -73,6 +73,9 @@ export function Header() {
                     <DropdownMenuItem asChild>
                       <Link href="/customer/shop">Dashboard</Link>
                     </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/customer/orders">View My Orders</Link>
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator className="bg-amber-200" />
                   </>
                 )}

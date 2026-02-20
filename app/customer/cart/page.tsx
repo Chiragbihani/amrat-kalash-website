@@ -36,8 +36,18 @@ export default function CartPage() {
   const cartItems = useMemo(() => {
     return cart.map((item) => {
       const product = getProductById(item.productId)
-      return { ...item, product }
-    })
+      if (!product) return null
+      
+      const variant = product.variants.find((v) => v.id === item.variantId)
+      if (!variant) return null
+      
+      return {
+        ...item,
+        productName: product.name,
+        variantSize: variant.size,
+        product,
+      }
+    }).filter((item) => item !== null)
   }, [cart])
 
   const total = useMemo(() => {

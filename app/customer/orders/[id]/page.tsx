@@ -115,7 +115,7 @@ export default function OrderConfirmationPage() {
                           </div>
                           <span className="text-amber-700">Qty: {item.quantity}</span>
                         </div>
-                        <p className="text-right text-amber-900 font-semibold">₹{item.subtotal.toFixed(2)}</p>
+                        <p className="text-right text-amber-900 font-semibold">₹{((item.subtotal || item.price * item.quantity) || 0).toFixed(2)}</p>
                       </div>
                     ))}
                   </div>
