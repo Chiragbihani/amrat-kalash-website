@@ -12,7 +12,7 @@ const _geistMono = Geist_Mono({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Amrat Kalash - Premium Oil Manufacturing',
-  description: 'Amrat Kalash offers the finest quality oils for cooking and wellness. Premium mustard, groundnut, and sunflower oils for health-conscious families.',
+  description: 'Amrat Kalash offers the finest quality oils for cooking and wellness. Premium mustard, groundnut, and Palm oils for health-conscious families.',
   generator: 'v0.app',
 }
 

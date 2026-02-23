@@ -73,12 +73,12 @@ export default function CustomerOrdersPage() {
     }
 
     const normalizedName = productName.toLowerCase()
-    if (normalizedName.includes('double filter') && normalizedName.includes('groundnut')) return '/oil-double-filter-groundnut.jpg'
-    if (normalizedName.includes('soyabean') || normalizedName.includes('soybean')) return '/oil-soybean.jpg'
-    if (normalizedName.includes('groundnut') || normalizedName.includes('peanut')) return '/oil-groundnut.jpg'
-    if (normalizedName.includes('palm')) return '/oil-palm.jpg'
-    if (normalizedName.includes('cotton')) return '/oil-cottonseed.jpg'
-    if (normalizedName.includes('mustard') || normalizedName.includes('sarso')) return '/oil-mustard.jpg'
+    if (normalizedName.includes('double filter') && normalizedName.includes('groundnut')) return '/Double_Filter_Groundnut_Oil.png'
+    if (normalizedName.includes('soyabean') || normalizedName.includes('soyabean')) return '/Soyabean_Oil.png'
+    if (normalizedName.includes('groundnut') || normalizedName.includes('peanut')) return '/Refined_Groundnut_Oil.png'
+    if (normalizedName.includes('palm')) return '/Refined_Palm_Oil.png'
+    if (normalizedName.includes('cotton')) return '/Refined_Cotton_Seed_Oil.png'
+    if (normalizedName.includes('mustard') || normalizedName.includes('sarso')) return '/Mustard_Oil.png'
     return '/placeholder.jpg'
   }
 

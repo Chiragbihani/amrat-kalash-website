@@ -6,15 +6,44 @@ import { useAuth } from '@/lib/auth-context'
 import { Menu, ShoppingCart, LogOut, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { useEffect, useState } from 'react'
 
 export function Header() {
   const { user, isAuthenticated, logout } = useAuth()
   const router = useRouter()
+  const [cartCount, setCartCount] = useState(0)
 
   const handleLogout = () => {
     logout()
     router.push('/')
   }
+
+  useEffect(() => {
+    // initialize cart count from localStorage
+    try {
+      const cart = JSON.parse(localStorage.getItem('amrat_cart') || '[]')
+      const count = Array.isArray(cart) ? cart.reduce((s: number, i: any) => s + (i.quantity || 0), 0) : 0
+      setCartCount(count)
+    } catch {
+      setCartCount(0)
+    }
+
+    const handler = (e: any) => {
+      try {
+        if (e?.detail && typeof e.detail.count === 'number') return setCartCount(e.detail.count)
+      } catch {}
+      try {
+        const cart = JSON.parse(localStorage.getItem('amrat_cart') || '[]')
+        const count = Array.isArray(cart) ? cart.reduce((s: number, i: any) => s + (i.quantity || 0), 0) : 0
+        setCartCount(count)
+      } catch {
+        setCartCount(0)
+      }
+    }
+
+    window.addEventListener('amrat_cart_updated', handler)
+    return () => window.removeEventListener('amrat_cart_updated', handler)
+  }, [])
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-amber-200 bg-white shadow-sm">
@@ -49,6 +78,9 @@ export function Header() {
             <Link href="/customer/cart">
               <Button variant="ghost" size="icon" className="relative">
                 <ShoppingCart className="w-5 h-5 text-amber-900" />
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold leading-none text-white bg-red-600 rounded-full">{cartCount}</span>
+                )}
               </Button>
             </Link>
           )}
@@ -70,9 +102,6 @@ export function Header() {
                 
                 {user?.role === 'customer' && (
                   <>
-                    <DropdownMenuItem asChild>
-                      <Link href="/customer/shop">Dashboard</Link>
-                    </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link href="/customer/orders">View My Orders</Link>
                     </DropdownMenuItem>

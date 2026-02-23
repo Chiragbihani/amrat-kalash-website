@@ -17,6 +17,7 @@ const productData: Record<string, any> = {
     name: 'Mustard Oil',
     type: 'mustard',
     description: 'Traditional cold-pressed mustard oil with a distinctive pungent flavor',
+    videoUrl: '/mustard-oil.mp4',
     benefits: [
       'Rich in selenium and omega-3 fatty acids',
       'Aids digestion and improves metabolism',
@@ -38,10 +39,35 @@ const productData: Record<string, any> = {
     storage: 'Store in a cool, dark place. Keep away from direct sunlight.',
     expiry: '24 months from date of manufacture',
   },
+  doubleFilterGroundnut: {
+    name: 'Double Filter Groundnut Oil',
+    type: 'doubleFilterGroundnut',
+    description: 'Premium double filtered groundnut oil with rich aroma',
+    videoUrl: '/double-filter-groundnut-oil.mp4',
+    benefits: [
+      'High in monounsaturated fats',
+      'Rich in Vitamin E',
+      'Improves heart health',
+      'Enhances immunity',
+      'High smoke point for frying',
+      'Naturally aromatic',
+    ],
+    usage: [
+      'Cooking: Best for traditional Indian dishes',
+      'Frying: Ideal for deep frying',
+      'Tempering: Enhances taste of curries',
+      'Daily use: Suitable for regular cooking',
+    ],
+    types: ['250ml', '1L', '2L', '5L', '10L'],
+    nutritional: 'Per 100ml: Calories 884, Fat 100g, Cholesterol 0mg',
+    storage: 'Keep tightly closed in a cool and dark place.',
+    expiry: '24 months from date of manufacture',
+  },
   groundnut: {
     name: 'Refined Groundnut Oil',
     type: 'groundnut',
     description: 'Light and versatile refined groundnut oil with a subtle nutty flavor',
+    videoUrl: '/video1.mp4',
     benefits: [
       'High in monounsaturated fats (good cholesterol)',
       'Rich in Vitamin E - powerful antioxidant',
@@ -64,36 +90,32 @@ const productData: Record<string, any> = {
     storage: 'Keep in an airtight container away from heat and light.',
     expiry: '24 months from date of manufacture',
   },
-  sunflower: {
+  palm: {
     name: 'Refined Palm Oil',
-    type: 'sunflower',
-    description: 'Pure refined palm oil rich in natural goodness',
+    type: 'palm',
+    description: 'High-quality refined palm oil for commercial and home use',
     benefits: [
-      'High in natural antioxidants',
-      'Supports skin health and rejuvenation',
-      'Promotes heart health',
-      'Rich in Vitamin E',
-      'Sustainable and eco-friendly sourced',
-      'Light and easily digestible',
-      'Good smoke point for cooking',
-      'Suitable for all cuisines',
+      'High oxidative stability',
+      'Rich in natural tocotrienols',
+      'Good for high-temperature cooking',
+      'Long shelf life',
+      'Cost-effective cooking oil',
     ],
     usage: [
-      'Cooking: Ideal for everyday cooking needs',
-      'Frying: Good smoke point for pan frying',
-      'Baking: Works well in baked goods',
-      'Skincare: Apply directly to face or body',
-      'Wellness: Can be used for massage',
+      'Cooking: Suitable for daily cooking',
+      'Frying: Ideal for commercial frying',
+      'Food processing: Widely used in food industry',
     ],
-    types: ['250ml', '1L', '2L', '5L', '10L'],
-    nutritional: 'Per 100ml: Calories 884, Fat 100g, Cholesterol 0mg, Sodium 0mg',
-    storage: 'Store in a cool place, away from direct sunlight and heat.',
+    types: ['1L', '2L', '5L', '10L'],
+    nutritional: 'Per 100ml: Calories 884, Fat 100g, Cholesterol 0mg',
+    storage: 'Store in a cool place away from direct sunlight.',
     expiry: '24 months from date of manufacture',
   },
-  soybean: {
-    name: 'Refined Soybean Oil',
-    type: 'soybean',
-    description: 'Nutrient-rich refined soybean oil packed with omega-3 fatty acids',
+  soyabean: {
+    name: 'Refined soyabean Oil',
+    type: 'soyabean',
+    description: 'Nutrient-rich refined soyabean oil packed with omega-3 fatty acids',
+    videoUrl: '/soyabean-oil.mp4',
     benefits: [
       'Rich in omega-3 and omega-6 fatty acids',
       'Supports heart and brain health',
@@ -202,10 +224,11 @@ export default function ProductInfoPage() {
           </p>
         </div>
       </section>
-
+        
       {/* Product Information */}
       <section className="py-16 md:py-20">
-        <div className="max-w-4xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
           <Card 
             className="border-2 overflow-hidden"
             style={{
@@ -352,7 +375,30 @@ export default function ProductInfoPage() {
               </div>
             </CardContent>
           </Card>
+          {product.videoUrl && (
+        <div className="sticky top-28">
+          <div className="rounded-2xl overflow-hidden shadow-xl bg-black">
+            <video
+              src={product.videoUrl}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              className="w-full h-[540px] object-cover"
+            />
+          </div>
+
+          <p
+            className="mt-3 text-sm text-center"
+            style={{ color: theme.secondary }}
+          >
+            Authentic processing of {product.name}
+          </p>
         </div>
+      )}
+        </div>
+      </div>
       </section>
 
       <Footer />

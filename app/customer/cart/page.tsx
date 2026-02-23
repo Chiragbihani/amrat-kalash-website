@@ -38,7 +38,7 @@ export default function CartPage() {
       const product = getProductById(item.productId)
       if (!product) return null
       
-      const variant = product.variants.find((v) => v.id === item.variantId)
+      const variant = product.variants.find((v: { id: any }) => v.id === item.variantId)
       if (!variant) return null
       
       return {
@@ -80,6 +80,7 @@ export default function CartPage() {
 
     setCart(updatedCart)
     localStorage.setItem('amrat_cart', JSON.stringify(updatedCart))
+    try { window.dispatchEvent(new CustomEvent('amrat_cart_updated', { detail: { count: updatedCart.reduce((s: number, i: any) => s + (i.quantity || 0), 0) } })) } catch {}
   }
 
   const removeItem = (productId: string, variantId: string) => {
@@ -89,6 +90,7 @@ export default function CartPage() {
     setCart(updatedCart)
     localStorage.setItem('amrat_cart', JSON.stringify(updatedCart))
     toast.success('Item removed from cart')
+    try { window.dispatchEvent(new CustomEvent('amrat_cart_updated', { detail: { count: updatedCart.reduce((s: number, i: any) => s + (i.quantity || 0), 0) } })) } catch {}
   }
 
   const clearCart = () => {
@@ -96,6 +98,7 @@ export default function CartPage() {
       setCart([])
       localStorage.setItem('amrat_cart', JSON.stringify([]))
       toast.success('Cart cleared')
+      try { window.dispatchEvent(new CustomEvent('amrat_cart_updated', { detail: { count: 0 } })) } catch {}
     }
   }
 

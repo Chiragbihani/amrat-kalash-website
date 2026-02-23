@@ -39,7 +39,7 @@ export function Footer() {
             <ul className="space-y-2 text-sm">
               <li className="hover:text-amber-300 transition cursor-pointer">Mustard Oil</li>
               <li className="hover:text-amber-300 transition cursor-pointer">Groundnut Oil</li>
-              <li className="hover:text-amber-300 transition cursor-pointer">Sunflower Oil</li>
+              <li className="hover:text-amber-300 transition cursor-pointer">Palm Oil</li>
             </ul>
           </div>
 

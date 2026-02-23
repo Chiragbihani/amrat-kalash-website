@@ -61,10 +61,11 @@ export default function CheckoutPage() {
       const product = getProductById(item.productId)
       if (!product) return null
       
-      const variant = product.variants.find((v) => v.id === item.variantId)
+      const variant = product.variants.find((v: { id: any }) => v.id === item.variantId)
       if (!variant) return null
       
       return {
+        variantId: variant.id,
         productId: item.productId,
         productName: product.name,
         variantSize: variant.size,
@@ -173,21 +174,7 @@ export default function CheckoutPage() {
         paymentMethod: 'cod',
       })
 
-      orderItems.forEach((item) => {
-        const product = getProductById(item.productId)
-        if (product) {
-          const variant = product.variants.find(
-            (v) => v.id === item.variantId
-          )
-          if (variant) {
-            updateStock(
-              item.productId,
-              item.variantId,
-              variant.stock - item.quantity
-            )
-          }
-        }
-      })
+      // Stock is updated inside `createOrder` now; no per-item update needed here.
 
       sendEmail({
         to: user!.email,
@@ -219,6 +206,7 @@ export default function CheckoutPage() {
 
       toast.success('Order placed successfully!')
       localStorage.removeItem('amrat_cart')
+      try { window.dispatchEvent(new CustomEvent('amrat_cart_updated', { detail: { count: 0 } })) } catch {}
       router.push(`/customer/orders/${order.id}`)
     } catch (error) {
       console.error('Order error:', error)

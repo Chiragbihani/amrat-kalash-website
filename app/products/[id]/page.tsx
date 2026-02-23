@@ -28,6 +28,8 @@ export default function ProductDetailPage() {
   const [selectedVariant, setSelectedVariant] = useState('')
   const [quantity, setQuantity] = useState(1)
   const [isAdding, setIsAdding] = useState(false)
+  const [showPopup, setShowPopup] = useState(false)
+  const [popupData, setPopupData] = useState<{ quantity: number; size: string; name: string } | null>(null)
 
   useEffect(() => {
     if (params?.id) {
@@ -137,6 +139,11 @@ export default function ProductDetailPage() {
       }
 
       localStorage.setItem('amrat_cart', JSON.stringify(cart))
+      // Dispatch an event so other components (Header) can update counts
+      try { window.dispatchEvent(new CustomEvent('amrat_cart_updated', { detail: { count: cart.reduce((s: number, i: any) => s + (i.quantity || 0), 0) } })) } catch {}
+      // show animated edible-oil popup
+      setPopupData({ quantity, size: currentVariant.size, name: product.name })
+      setShowPopup(true)
       toast.success(`Added ${quantity} x ${currentVariant.size} to cart`)
       setQuantity(1)
     } catch (error) {
@@ -368,6 +375,26 @@ export default function ProductDetailPage() {
       </div>
 
       <Footer />
+      {showPopup && popupData && (
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore - dynamic import avoided for brevity
+        <
+          div
+          // render inline popup to avoid adding heavy imports
+          className="fixed right-6 bottom-20 z-50 pointer-events-none"
+        >
+          <div className="flex items-center gap-3 bg-white/90 backdrop-blur-md border border-amber-200 rounded-lg px-4 py-3 shadow-lg animate-cart-pop">
+            <div className="w-10 h-10 flex items-center justify-center rounded-full bg-amber-100">
+              <span className="text-2xl">🫙</span>
+            </div>
+            <div className="text-sm">
+              <div className="font-semibold text-amber-900">Added to cart</div>
+              <div className="text-amber-700">{popupData.quantity} × {popupData.size} {popupData.name}</div>
+            </div>
+          </div>
+          <style>{`@keyframes cartPop{0%{transform:translateY(12px) scale(.96);opacity:0}10%{transform:translateY(0) scale(1);opacity:1}80%{transform:translateY(-6px) scale(1);opacity:1}100%{transform:translateY(-20px) scale(.98);opacity:0}}.animate-cart-pop{animation:cartPop 1.8s cubic-bezier(.2,.9,.3,1) forwards}`}</style>
+        </div>
+      )}
     </main>
   )
 }
