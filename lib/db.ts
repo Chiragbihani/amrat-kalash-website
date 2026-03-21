@@ -292,7 +292,10 @@ export const saveDB = (db: any) => {
 // Product operations
 export const getProducts = () => {
   const db = getDB()
-  return db.products as Product[]
+  return db.products.map((product: any) => ({
+    ...product,
+    createdAt: new Date(product.createdAt)
+  })) as Product[]
 }
 
 export const getProductById = (id: string) => {
@@ -372,7 +375,12 @@ export const authenticateUser = (email: string, password: string) => {
 
 export const getUserById = (id: string) => {
   const db = getDB()
-  return db.users.find((u: User) => u.id === id)
+  const user = db.users.find((u: User) => u.id === id)
+  if (!user) return undefined
+  return {
+    ...user,
+    createdAt: new Date(user.createdAt)
+  } as User
 }
 
 export const createUser = (user: Omit<User, 'id' | 'createdAt'>) => {
@@ -386,17 +394,33 @@ export const createUser = (user: Omit<User, 'id' | 'createdAt'>) => {
 // Order operations
 export const getOrders = () => {
   const db = getDB()
-  return db.orders as Order[]
+  return db.orders.map((order: any) => ({
+    ...order,
+    createdAt: new Date(order.createdAt),
+    deliveredAt: order.deliveredAt ? new Date(order.deliveredAt) : undefined
+  })) as Order[]
 }
 
 export const getOrderById = (id: string) => {
   const db = getDB()
-  return db.orders.find((o: Order) => o.id === id)
+  const order = db.orders.find((o: Order) => o.id === id)
+  if (!order) return undefined
+  return {
+    ...order,
+    createdAt: new Date(order.createdAt),
+    deliveredAt: order.deliveredAt ? new Date(order.deliveredAt) : undefined
+  } as Order
 }
 
 export const getCustomerOrders = (customerId: string) => {
   const db = getDB()
-  return db.orders.filter((o: Order) => o.customerId === customerId) as Order[]
+  return db.orders
+    .filter((o: Order) => o.customerId === customerId)
+    .map((order: any) => ({
+      ...order,
+      createdAt: new Date(order.createdAt),
+      deliveredAt: order.deliveredAt ? new Date(order.deliveredAt) : undefined
+    })) as Order[]
 }
 
 export const createOrder = (order: Omit<Order, 'id' | 'createdAt'>) => {

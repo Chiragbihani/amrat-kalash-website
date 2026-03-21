@@ -11,8 +11,12 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
-import { BoxIcon, ShoppingCart, Package, TrendingUp, AlertCircle } from 'lucide-react'
+import { BoxIcon, ShoppingCart, Package, TrendingUp, AlertCircle, Filter } from 'lucide-react'
 import Link from 'next/link'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
 export default function AdminDashboard() {
   const { user, isAuthenticated, loading: authLoading } = useAuth()
@@ -21,6 +25,12 @@ export default function AdminDashboard() {
   const [products, setProducts] = useState<Product[]>([])
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
+
+  // Filter states
+  const [statusFilter, setStatusFilter] = useState<string>('all')
+  const [oilTypeFilter, setOilTypeFilter] = useState<string>('all')
+  const [dateFrom, setDateFrom] = useState<string>('')
+  const [dateTo, setDateTo] = useState<string>('')
 
   // Check authentication
   useEffect(() => {
@@ -48,6 +58,23 @@ export default function AdminDashboard() {
     setLoading(false)
   }, [authLoading, user])
 
+  // Create product type map
+  const productTypeMap = products.reduce((map, product) => {
+    map[product.id] = product.type
+    return map
+  }, {} as Record<string, string>)
+
+  // Filter and sort orders
+  const filteredAndSortedOrders = orders
+    .filter(order => {
+      if (statusFilter !== 'all' && order.status !== statusFilter) return false
+      if (oilTypeFilter !== 'all' && !order.items.some(item => productTypeMap[item.productId] === oilTypeFilter)) return false
+      if (dateFrom && new Date(order.createdAt) < new Date(dateFrom)) return false
+      if (dateTo && new Date(order.createdAt) > new Date(dateTo + 'T23:59:59')) return false
+      return true
+    })
+    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+
 
   // Calculate statistics
   const totalProducts = products.length
@@ -61,6 +88,9 @@ export default function AdminDashboard() {
   const lowStockItems = products.flatMap((p) =>
     p.variants.filter(v => v.stock < 10).map(v => ({ product: p, variant: v }))
   )
+
+  // Sorted orders for overview
+  const sortedOrders = [...orders].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
 
   return (
     <main className="min-h-screen flex flex-col">
@@ -185,7 +215,7 @@ export default function AdminDashboard() {
                     <p className="text-gray-600">No orders yet</p>
                   ) : (
                     <div className="space-y-3">
-                      {orders.slice(0, 5).map((order) => (
+                      {sortedOrders.slice(0, 5).map((order) => (
                         <div key={order.id} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                           <div>
                             <p className="font-medium text-gray-900">{order.id}</p>
@@ -309,9 +339,88 @@ export default function AdminDashboard() {
             {/* Orders Tab */}
             <TabsContent value="orders">
               <div className="space-y-4">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Orders Management</h2>
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900">Orders Management</h2>
+                  <Sheet>
+                    <SheetTrigger asChild>
+                      <Button variant="outline" className="border-amber-300 text-amber-600 hover:bg-amber-50">
+                        <Filter className="w-4 h-4 mr-2" />
+                        Filters
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent>
+                      <SheetHeader>
+                        <SheetTitle>Filter Orders</SheetTitle>
+                      </SheetHeader>
+                      <div className="space-y-4 mt-4">
+                        <div>
+                          <Label htmlFor="status">Status</Label>
+                          <Select value={statusFilter} onValueChange={setStatusFilter}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="All statuses" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">All Statuses</SelectItem>
+                              <SelectItem value="pending">Pending</SelectItem>
+                              <SelectItem value="confirmed">Confirmed</SelectItem>
+                              <SelectItem value="delivered">Delivered</SelectItem>
+                              <SelectItem value="cancelled">Cancelled</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label htmlFor="oilType">Oil Type</Label>
+                          <Select value={oilTypeFilter} onValueChange={setOilTypeFilter}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="All oil types" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">All Types</SelectItem>
+                              <SelectItem value="mustard">Mustard</SelectItem>
+                              <SelectItem value="groundnut">Groundnut</SelectItem>
+                              <SelectItem value="doubleFilterGroundnut">Double Filter Groundnut</SelectItem>
+                              <SelectItem value="soyabean">Soyabean</SelectItem>
+                              <SelectItem value="cottonseed">Cottonseed</SelectItem>
+                              <SelectItem value="palm">Palm</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label htmlFor="dateFrom">Date From</Label>
+                          <Input
+                            id="dateFrom"
+                            type="date"
+                            value={dateFrom}
+                            onChange={(e) => setDateFrom(e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="dateTo">Date To</Label>
+                          <Input
+                            id="dateTo"
+                            type="date"
+                            value={dateTo}
+                            onChange={(e) => setDateTo(e.target.value)}
+                          />
+                        </div>
+                        <Button
+                          onClick={() => {
+                            setStatusFilter('all')
+                            setOilTypeFilter('all')
+                            setDateFrom('')
+                            setDateTo('')
+                          }}
+                          variant="outline"
+                          className="w-full"
+                        >
+                          Clear Filters
+                        </Button>
+                      </div>
+                    </SheetContent>
+                  </Sheet>
+                </div>
 
-                {orders.length === 0 ? (
+                {filteredAndSortedOrders.length === 0 ? (
                   <Card className="border-gray-200">
                     <CardContent className="p-12 text-center">
                       <ShoppingCart className="w-12 h-12 text-gray-400 mx-auto mb-4" />
@@ -319,7 +428,7 @@ export default function AdminDashboard() {
                     </CardContent>
                   </Card>
                 ) : (
-                  orders.map((order) => (
+                  filteredAndSortedOrders.map((order) => (
                     <Card key={order.id} className="border-amber-200">
                       <CardHeader className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-200">
                         <div className="flex justify-between items-start">
