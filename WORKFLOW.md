@@ -57,7 +57,7 @@ Amrat Kalash is a comprehensive e-commerce platform for selling premium oils (So
   - Phone Number
 - Payment method: **Cash on Delivery (COD) Only**
 - Order summary review before final submission
-- Click "Place Order" to complete purchase
+- Click "Place Order" to complete purchase and you are done.
 
 ### 7. Order Confirmation
 - Order confirmation page displays:
