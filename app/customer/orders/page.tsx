@@ -76,7 +76,7 @@ export default function CustomerOrdersPage() {
     if (normalizedName.includes('double filter') && normalizedName.includes('groundnut')) return '/Double_Filter_Groundnut_Oil.png'
     if (normalizedName.includes('soyabean') || normalizedName.includes('soyabean')) return '/Soyabean_Oil.png'
     if (normalizedName.includes('groundnut') || normalizedName.includes('peanut')) return '/Refined_Groundnut_Oil.png'
-    if (normalizedName.includes('palm')) return '/Refined_Palm_Oil.png'
+    if (normalizedName.includes('palm')) return '/Refined_Palm_oil.png'
     if (normalizedName.includes('cotton')) return '/Refined_Cotton_Seed_Oil.png'
     if (normalizedName.includes('mustard') || normalizedName.includes('sarso')) return '/Mustard_Oil.png'
     return '/placeholder.jpg'
