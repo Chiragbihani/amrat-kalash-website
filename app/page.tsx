@@ -326,7 +326,7 @@ export default function Home() {
       >
         <div className="relative h-56 overflow-hidden">
           <Image
-            src="/Refined_Palm_oil.png"
+            src="/Refined_Palm_Oil.png"
             alt="Refined Palm Oil"
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"
