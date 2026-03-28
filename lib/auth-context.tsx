@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
-import { authenticateUser, createUser } from './db-client'
+import { getUserByEmail, createUser } from './db-client'
 
 export interface AuthUser {
   id: string
@@ -10,17 +10,20 @@ export interface AuthUser {
   role: 'customer' | 'admin'
 }
 
+export type AuthLoginResult = 'success' | 'invalid_credentials' | 'user_not_found'
+export type AuthRegisterResult = 'success' | 'email_already_registered' | 'error'
+
 interface AuthContextType {
   user: AuthUser | null
   loading: boolean
-  login: (email: string, password: string) => Promise<boolean>
+  login: (email: string, password: string) => Promise<AuthLoginResult>
   logout: () => void
   register: (
     email: string,
     password: string,
     name: string,
     role: 'customer' | 'admin'
-  ) => Promise<boolean>
+  ) => Promise<AuthRegisterResult>
   isAuthenticated: boolean
 }
 
@@ -51,15 +54,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const login = async (email: string, password: string) => {
-    const authUser = authenticateUser(email, password)
+    const existingUser = getUserByEmail(email)
 
-    if (!authUser) return false
+    if (!existingUser) {
+      return 'user_not_found'
+    }
+
+    if (existingUser.password !== password) {
+      return 'invalid_credentials'
+    }
 
     const userData: AuthUser = {
-      id: authUser.id,
-      email: authUser.email,
-      name: authUser.name,
-      role: authUser.role,
+      id: existingUser.id,
+      email: existingUser.email,
+      name: existingUser.name,
+      role: existingUser.role,
     }
 
     setUser(userData)
@@ -68,7 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem('amrat_user', JSON.stringify(userData))
     }
 
-    return true
+    return 'success'
   }
 
   const register = async (
@@ -93,9 +102,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.setItem('amrat_user', JSON.stringify(userData))
       }
 
-      return true
-    } catch {
-      return false
+      return 'success'
+    } catch (error: any) {
+      if (error?.message === 'EMAIL_ALREADY_REGISTERED') {
+        return 'email_already_registered'
+      }
+      return 'error'
     }
   }
 

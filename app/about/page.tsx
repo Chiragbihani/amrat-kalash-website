@@ -12,26 +12,26 @@ export default function About() {
       <Header />
 
       {/* Hero Section with Image */}
-      <section className="relative h-[500px] md:h-[600px] overflow-hidden">
+      <section className="relative h-[500px] md:h-[600px] overflow-hidden bg-gradient-to-br from-[#33382D] to-[#404437]">
         <div className="absolute inset-0 
   bg-gradient-to-r 
-  from-amber-700/40 
-  to-orange-700/30 
+  from-[#33382D]/60 
+  to-[#404437]/40 
   z-10" 
 />
 <Image
   src="/hero-image.png"
   alt="Amrat Kalash Hero"
   fill
-  className="object-cover"
+  className="object-cover opacity-30"
   priority
 />
         <div className="relative z-20 h-full flex items-center">
           <div className="max-w-6xl mx-auto px-4 w-full">
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 text-pretty">
+            <h1 className="text-5xl md:text-6xl font-bold text-[#F8F8F8] mb-4 text-pretty">
               About Amrat Kalash
             </h1>
-            <p className="text-xl md:text-2xl text-amber-50 max-w-2xl">
+            <p className="text-xl md:text-2xl text-[#F8F8F8]/90 max-w-2xl">
               Delivering pure, natural oils for generations of happy, healthy families
             </p>
           </div>
@@ -39,15 +39,15 @@ export default function About() {
       </section>
 
       {/* Company Story - Enhanced Layout */}
-      <section className="py-16 md:py-24">
+      <section className="py-16 md:py-24 bg-gradient-to-b from-[#F8F8F8] via-white to-[#F8F8F8]">
         <div className="max-w-6xl mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="inline-block bg-amber-100 text-amber-800 px-4 py-2 rounded-full mb-6 text-sm font-semibold">
+              <div className="inline-block bg-[#33382D] text-[#FFFFFF] px-4 py-2 rounded-full mb-6 text-sm font-semibold">
                 Our Heritage
               </div>
-              <h2 className="text-4xl md:text-5xl font-bold text-amber-900 mb-6 leading-tight">
-                Crafted with Care, <span className="text-amber-600">Trusted for Generations</span>
+              <h2 className="text-4xl md:text-5xl font-bold text-[#33382D] mb-6 leading-tight">
+                Crafted with Care, <span className="text-[#404437]">Trusted for Generations</span>
               </h2>
               <p className="text-amber-800 leading-relaxed mb-4 text-lg">
                 Amrat Kalash was founded with a mission to bring the purest, most nutritious oils to families who care about their health and wellness. With decades of experience in oil manufacturing, we have built a reputation for excellence and quality.
@@ -89,7 +89,7 @@ export default function About() {
       <section className="bg-gradient-to-b from-amber-50 to-orange-50 py-16 md:py-24">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-amber-900 mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-[#33382D] mb-4">
               Mission & Vision
             </h2>
             <p className="text-lg text-amber-800 max-w-2xl mx-auto">
@@ -103,7 +103,7 @@ export default function About() {
                   <div className="w-14 h-14 bg-amber-600 rounded-lg flex items-center justify-center flex-shrink-0">
                     <Target className="w-7 h-7 text-white" />
                   </div>
-                  <h3 className="text-2xl font-bold text-amber-900">Our Mission</h3>
+                  <h3 className="text-2xl font-bold text-[#33382D]">Our Mission</h3>
                 </div>
                 <p className="text-amber-800 leading-relaxed text-lg">
                   To provide premium quality, pure, and natural oils that enhance the health, wellness, and culinary experiences of families while maintaining the highest standards of quality and sustainability.
@@ -117,7 +117,7 @@ export default function About() {
                   <div className="w-14 h-14 bg-amber-600 rounded-lg flex items-center justify-center flex-shrink-0">
                     <Leaf className="w-7 h-7 text-white" />
                   </div>
-                  <h3 className="text-2xl font-bold text-amber-900">Our Vision</h3>
+                  <h3 className="text-2xl font-bold text-[#33382D]">Our Vision</h3>
                 </div>
                 <p className="text-amber-800 leading-relaxed text-lg">
                   To be the most trusted brand for premium oils in the country, recognized for our commitment to excellence, innovation, and environmental responsibility.
@@ -132,7 +132,7 @@ export default function About() {
       <section className="py-16 md:py-24">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-amber-900 mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-[#33382D] mb-4">
               Our Core Values
             </h2>
             <p className="text-lg text-amber-800 max-w-2xl mx-auto">
@@ -142,10 +142,10 @@ export default function About() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card className="border-0 shadow-md hover:shadow-xl transition-all duration-300 group">
               <CardContent className="p-6">
-                <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-amber-600 transition-colors">
+                <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-[#33382D]/90 transition-colors">
                   <Award className="w-6 h-6 text-amber-600 group-hover:text-white transition-colors" />
                 </div>
-                <h3 className="text-lg font-bold text-amber-900 mb-2">Quality</h3>
+                <h3 className="text-lg font-bold text-[#33382D] mb-2">Quality</h3>
                 <p className="text-sm text-amber-700 leading-relaxed">
                   Uncompromising commitment to excellence in every product we make.
                 </p>
@@ -154,10 +154,10 @@ export default function About() {
 
             <Card className="border-0 shadow-md hover:shadow-xl transition-all duration-300 group">
               <CardContent className="p-6">
-                <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-amber-600 transition-colors">
+                <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-[#33382D]/90 transition-colors">
                   <Leaf className="w-6 h-6 text-amber-600 group-hover:text-white transition-colors" />
                 </div>
-                <h3 className="text-lg font-bold text-amber-900 mb-2">Purity</h3>
+                <h3 className="text-lg font-bold text-[#33382D] mb-2">Purity</h3>
                 <p className="text-sm text-amber-700 leading-relaxed">
                   100% natural, no additives, preservatives, or artificial ingredients.
                 </p>
@@ -166,10 +166,10 @@ export default function About() {
 
             <Card className="border-0 shadow-md hover:shadow-xl transition-all duration-300 group">
               <CardContent className="p-6">
-                <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-amber-600 transition-colors">
+                <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-[#33382D]/90 transition-colors">
                   <Leaf className="w-6 h-6 text-amber-600 group-hover:text-white transition-colors" />
                 </div>
-                <h3 className="text-lg font-bold text-amber-900 mb-2">Sustainability</h3>
+                <h3 className="text-lg font-bold text-[#33382D] mb-2">Sustainability</h3>
                 <p className="text-sm text-amber-700 leading-relaxed">
                   Environmentally conscious practices in sourcing and production.
                 </p>
@@ -178,10 +178,10 @@ export default function About() {
 
             <Card className="border-0 shadow-md hover:shadow-xl transition-all duration-300 group">
               <CardContent className="p-6">
-                <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-amber-600 transition-colors">
+                <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-[#33382D]/90 transition-colors">
                   <Users className="w-6 h-6 text-amber-600 group-hover:text-white transition-colors" />
                 </div>
-                <h3 className="text-lg font-bold text-amber-900 mb-2">Trust</h3>
+                <h3 className="text-lg font-bold text-[#33382D] mb-2">Trust</h3>
                 <p className="text-sm text-amber-700 leading-relaxed">
                   Building lasting relationships with our customers and stakeholders.
                 </p>
@@ -195,7 +195,7 @@ export default function About() {
       <section className="bg-gradient-to-b from-amber-50 to-white py-16 md:py-24">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-amber-900 mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-[#33382D] mb-4">
               Our Manufacturing Process
             </h2>
             <p className="text-lg text-amber-800 max-w-2xl mx-auto">
@@ -243,7 +243,7 @@ export default function About() {
       </section>
 
       {/* Stats Section - Enhanced */}
-      <section className="bg-gradient-to-r from-amber-700 to-orange-700 py-16 md:py-20 text-white">
+      <section className="bg-gradient-to-r from-[#33382D] to-[#33382D] py-16 md:py-20 text-white">
         <div className="max-w-6xl mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
@@ -255,7 +255,7 @@ export default function About() {
               <div key={index} className="text-center">
                 <div className="text-4xl mb-2">{stat.icon}</div>
                 <div className="text-4xl md:text-5xl font-bold mb-2">{stat.number}</div>
-                <p className="text-amber-50">{stat.label}</p>
+                <p className="text-amber-100">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -265,7 +265,7 @@ export default function About() {
       {/* CTA Section */}
       <section className="py-16 md:py-20 bg-amber-50">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-amber-900 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#33382D] mb-4">
             Experience the Difference
           </h2>
           <p className="text-lg text-amber-800 mb-8">

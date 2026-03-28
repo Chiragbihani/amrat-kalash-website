@@ -28,7 +28,7 @@ function AuthMenu() {
   if (!isAuthenticated) {
     return (
       <Link href="/auth">
-        <Button className="bg-amber-600 hover:bg-amber-700 hidden sm:inline-flex">
+        <Button className="bg-[#33382D] hover:bg-[#404437] hidden sm:inline-flex">
           Login
         </Button>
       </Link>
@@ -40,27 +40,27 @@ function AuthMenu() {
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          className="border-amber-300 text-amber-600 hover:bg-amber-50 gap-2 bg-transparent"
+          className="border-[#757871] text-[#33382D] hover:bg-[#F8F8F8] bg-transparent gap-2"
         >
           <User className="w-4 h-4" />
           {user?.name}
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="end" className="w-48 border-amber-200">
+      <DropdownMenuContent align="end" className="w-48 border-[#757871]/20">
         <div className="px-2 py-1.5">
-          <p className="text-xs font-semibold text-amber-900">{user?.email}</p>
-          <p className="text-xs text-amber-700">({user?.role})</p>
+          <p className="text-xs font-semibold text-[#33382D]">{user?.email}</p>
+          <p className="text-xs text-[#757871]">({user?.role})</p>
         </div>
 
-        <DropdownMenuSeparator className="bg-amber-200" />
+        <DropdownMenuSeparator className="bg-[#757871]/20" />
 
         {user?.role === 'customer' && (
           <>
             <DropdownMenuItem asChild>
               <Link href="/customer/orders">My Orders</Link>
             </DropdownMenuItem>
-            <DropdownMenuSeparator className="bg-amber-200" />
+            <DropdownMenuSeparator className="bg-[#757871]/20" />
           </>
         )}
 
@@ -69,7 +69,7 @@ function AuthMenu() {
             <DropdownMenuItem asChild>
               <Link href="/admin/dashboard">Dashboard</Link>
             </DropdownMenuItem>
-            <DropdownMenuSeparator className="bg-amber-200" />
+            <DropdownMenuSeparator className="bg-[#757871]/20" />
           </>
         )}
 
@@ -111,15 +111,17 @@ export function Header() {
   }, [])
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-amber-200 bg-white shadow-sm">
+    <header className="sticky top-0 z-50 w-full border-b border-[#757871]/20 bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center text-white font-bold">
-            AK
-          </div>
+          <img 
+            src="/logo.jpeg" 
+            alt="Amrat Kalash Logo" 
+            className="w-12 h-12 object-contain rounded-full"
+          />
           <div>
-            <h1 className="font-bold text-xl text-amber-900">Amrat Kalash</h1>
-            <p className="text-xs text-amber-700">Premium Oils</p>
+            <h1 className="font-bold text-xl text-[#33382D]">Amrat Kalash</h1>
+            <p className="text-xs text-[#757871]">Premium Oils</p>
           </div>
         </Link>
 
@@ -128,7 +130,7 @@ export function Header() {
             <Link
               key={item}
               href={`/${item === 'Home' ? '' : item.toLowerCase()}`}
-              className="text-amber-900 hover:text-amber-600 text-sm font-medium"
+              className="text-[#33382D] hover:text-[#404437] text-sm font-medium"
             >
               {item}
             </Link>
@@ -139,7 +141,7 @@ export function Header() {
           {isAuthenticated && user?.role === 'customer' && (
             <Link href="/customer/cart">
               <Button variant="ghost" size="icon" className="relative">
-                <ShoppingCart className="w-5 h-5 text-amber-900" />
+                <ShoppingCart className="w-5 h-5 text-[#33382D]" />
                 {cartCount > 0 && (
                   <span className="absolute -top-1 -right-1 px-2 py-0.5 text-xs font-bold text-white bg-red-600 rounded-full">
                     {cartCount}
@@ -152,7 +154,7 @@ export function Header() {
           <AuthMenu />
 
           <Button variant="ghost" size="icon" className="md:hidden">
-            <Menu className="w-5 h-5 text-amber-900" />
+            <Menu className="w-5 h-5 text-[#33382D]" />
           </Button>
         </div>
       </div>

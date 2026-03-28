@@ -21,6 +21,7 @@ import {
   updateProduct as dbUpdateProduct,
   deleteProduct as dbDeleteProduct,
   addProduct as dbAddProduct,
+  getUserByEmail as dbGetUserByEmail,
   getUserById as dbGetUserById,
   saveDB,
 } from './db'
@@ -90,6 +91,11 @@ export const updatePrice = (productId: string, variantId: string, newPrice: numb
 export const authenticateUser = (email: string, password: string) => {
   ensureBrowser()
   return dbAuthenticateUser(email, password)
+}
+
+export const getUserByEmail = (email: string) => {
+  ensureBrowser()
+  return dbGetUserByEmail(email)
 }
 
 export const createUser = (user: Omit<User, 'id' | 'createdAt'>) => {

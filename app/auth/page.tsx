@@ -40,21 +40,27 @@ export default function AuthPage() {
 
     setIsLoading(true)
     try {
-      const success = await login(loginEmail, loginPassword)
-      if (success) {
+      const result = await login(loginEmail, loginPassword)
+
+      if (result === 'success') {
         toast.success('Logged in successfully!')
 
-        const user = JSON.parse(localStorage.getItem('user') || '{}')
+        const user = JSON.parse(localStorage.getItem('amrat_user') || '{}')
 
         if (user?.role === 'admin') {
           router.replace('/admin/dashboard')
         } else {
           router.replace('/customer/shop')
         }
+        return
       }
 
-      else {
+      if (result === 'user_not_found') {
+        toast.error('Email not registered. Please sign up first.')
+      } else if (result === 'invalid_credentials') {
         toast.error('Invalid email or password')
+      } else {
+        toast.error('Login failed')
       }
     } catch (error) {
       toast.error('Login failed')
@@ -83,14 +89,19 @@ export default function AuthPage() {
 
     setIsLoading(true)
     try {
-      const success = await register(registerEmail, registerPassword, registerName, userType)
-      if (success) {
+      const result = await register(registerEmail, registerPassword, registerName, userType)
+      if (result === 'success') {
         toast.success('Account created successfully!')
         if (userType === 'admin') {
           router.push('/admin/dashboard')
         } else {
           router.push('/customer/shop')
         }
+        return
+      }
+
+      if (result === 'email_already_registered') {
+        toast.error('Email is already registered. Please login instead.')
       } else {
         toast.error('Registration failed')
       }
@@ -107,13 +118,13 @@ export default function AuthPage() {
         {/* Logo Section */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Droplets className="w-8 h-8 text-amber-600" />
-            <span className="text-2xl font-bold text-amber-900">Amrat Kalash</span>
+            <Droplets className="w-8 h-8 text-[#33382D]" />
+            <span className="text-3xl font-bold text-[#33382D]">Amrat Kalash</span>
           </div>
-          <p className="text-amber-700">Premium Quality Oils</p>
+          <p className="text-[#404437]">Premium Quality Oils</p>
         </div>
 
-        <Card className="border-amber-100 shadow-lg">
+        <Card className="border-[#757871]/20 shadow-lg">
           <CardHeader className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-100">
             <CardTitle className="text-amber-900">Welcome</CardTitle>
             <CardDescription>Login or create a new account</CardDescription>
@@ -139,8 +150,6 @@ export default function AuthPage() {
                       className="border-amber-200 focus-visible:ring-amber-600"
                       disabled={isLoading}
                     />
-                    <p className="text-xs text-amber-600">Demo: admin@amratkalash.com (Admin)</p>
-                    <p className="text-xs text-amber-600">Demo: customer@example.com (Customer)</p>
                   </div>
 
                   <div className="space-y-2">
@@ -153,7 +162,7 @@ export default function AuthPage() {
                       className="border-amber-200 focus-visible:ring-amber-600"
                       disabled={isLoading}
                     />
-                    <p className="text-xs text-amber-600">Demo passwords: admin123 / customer123</p>
+
                   </div>
 
                   <Button type="submit" className="w-full bg-amber-600 hover:bg-amber-700" disabled={isLoading}>

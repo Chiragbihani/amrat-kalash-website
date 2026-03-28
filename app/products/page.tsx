@@ -11,7 +11,8 @@ import { productThemes } from '@/lib/product-themes'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { ShoppingCart, Leaf } from 'lucide-react'
+import { Leaf, ShoppingCart } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 
 export default function Products() {
@@ -35,16 +36,10 @@ export default function Products() {
       <Header />
 
       {/* Hero Section */}
-      <section className={`py-12 md:py-16 transition-all duration-500 ${
-        theme ? `bg-gradient-to-r ${theme.bgGradient}` : 'bg-gradient-to-r from-amber-50 to-orange-50'
-      }`}>
+      <section className="py-12 md:py-16 bg-gradient-to-r from-[#F8F8F8] to-white">
         <div className="max-w-6xl mx-auto px-4">
-          <h1 className={`text-4xl md:text-5xl font-bold mb-4 text-pretty transition-colors ${
-            theme ? theme.textPrimary : 'text-amber-900'
-          }`}>Our Premium Oil Collection</h1>
-          <p className={`text-lg transition-colors ${
-            theme ? theme.textSecondary : 'text-amber-800'
-          }`}>Discover the finest quality oils, carefully selected and processed for your family's health and taste.</p>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-pretty text-[#33382D]">Our Premium Oil Collection</h1>
+          <p className="text-lg text-[#404437]">Discover the finest quality oils, carefully selected and processed for your family's health and taste.</p>
         </div>
       </section>
 
@@ -70,13 +65,19 @@ export default function Products() {
                   boxShadow: isSelected ? '0 10px 15px -3px rgba(0, 0, 0, 0.1)' : 'none',
                 }}
               >
-                <div 
-                  className="h-48 flex items-center justify-center transition-all"
-                  style={{
-                    background: `linear-gradient(to bottom right, ${productTheme.primary}, ${productTheme.secondary})`,
-                  }}
-                >
-                  <Leaf className="w-16 h-16 text-white opacity-30" />
+                <div className="h-48 relative overflow-hidden">
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    fill
+                    className="object-cover transition-transform duration-300 hover:scale-105"
+                  />
+                  <div 
+                    className="absolute inset-0 transition-all"
+                    style={{
+                      background: `linear-gradient(to bottom right, ${productTheme.primary}22, ${productTheme.secondary}22)`,
+                    }}
+                  />
                 </div>
                 <CardContent className="p-4">
                   <Badge 
@@ -140,14 +141,14 @@ export default function Products() {
       {/* Why Choose Us Section */}
       <section className="bg-amber-50 py-16 md:py-20">
         <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-amber-900 mb-12 text-center">Why Choose Amrat Kalash?</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-[#33382D] mb-12 text-center">Why Choose Amrat Kalash?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card className="border-amber-200">
               <CardContent className="p-6">
                 <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mb-4">
                   <Leaf className="w-6 h-6 text-amber-600" />
                 </div>
-                <h3 className="font-bold text-amber-900 mb-2">100% Pure & Natural</h3>
+                <h3 className="font-bold text-[#33382D] mb-2">100% Pure & Natural</h3>
                 <p className="text-amber-700 text-sm">Cold-pressed and no additives or preservatives. Pure goodness in every bottle.</p>
               </CardContent>
             </Card>
@@ -157,7 +158,7 @@ export default function Products() {
                 <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mb-4">
                   <Leaf className="w-6 h-6 text-amber-600" />
                 </div>
-                <h3 className="font-bold text-amber-900 mb-2">Quality Assured</h3>
+                <h3 className="font-bold text-[#33382D] mb-2">Quality Assured</h3>
                 <p className="text-amber-700 text-sm">Lab tested and certified for purity, quality, and nutritional value.</p>
               </CardContent>
             </Card>
@@ -167,7 +168,7 @@ export default function Products() {
                 <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mb-4">
                   <Leaf className="w-6 h-6 text-amber-600" />
                 </div>
-                <h3 className="font-bold text-amber-900 mb-2">Eco-Conscious</h3>
+                <h3 className="font-bold text-[#33382D] mb-2">Eco-Conscious</h3>
                 <p className="text-amber-700 text-sm">Sustainable sourcing with environmentally friendly production methods.</p>
               </CardContent>
             </Card>

@@ -3,12 +3,12 @@ import { Mail, MapPin, Phone } from 'lucide-react'
 
 export function Footer() {
   return (
-    <footer className="bg-amber-900 text-amber-50 mt-16">
+    <footer className="bg-[#33382D] text-amber-50 mt-16">
       <div className="max-w-6xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div>
             <h3 className="font-bold text-lg mb-4 text-amber-100">Amrat Kalash</h3>
-            <p className="text-sm text-amber-100 leading-relaxed">
+            <p className="text-sm text-white leading-relaxed">
               Premium quality oils for health-conscious families since decades.
             </p>
           </div>
@@ -52,17 +52,17 @@ export function Footer() {
               </div>
               <div className="flex gap-2 items-center">
                 <Phone className="w-4 h-4 flex-shrink-0" />
-                <p>+91-XXXX-XXXX-XX</p>
+                <p>+91-8955040478</p>
               </div>
               <div className="flex gap-2 items-center">
                 <Mail className="w-4 h-4 flex-shrink-0" />
-                <p>info@amratkalash.com</p>
+                <p>amrishaagros@gmail.com</p>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-amber-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-amber-100">
+        <div className="border-t border-white pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-amber-100">
           <p>&copy; 2024 Amrat Kalash. All rights reserved.</p>
           <div className="flex gap-6 mt-4 md:mt-0">
             <Link href="#" className="hover:text-amber-300 transition">

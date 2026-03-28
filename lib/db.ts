@@ -118,7 +118,7 @@ const getDefaultDB = () => {
       name: 'Double Filter Groundnut Oil',
       type: 'doubleFilterGroundnut',
       description: 'Premium double filtered groundnut oil with rich aroma',
-      image: '/Double_Filter_Groundnut_Oil.png',
+      image: '/Double_filter_Groundnut_oil.png',
       ingredients: ['100% Pure Groundnut (Peanut)', 'Double Filtered', 'No Chemicals'],
 
       benefits: [
@@ -143,7 +143,7 @@ const getDefaultDB = () => {
       name: 'Soyabean Oil',
       type: 'soyabean',
       description: 'Pure soyabean oil with balanced nutrition, great for both cooking and health',
-      image: '/Soyabean_Oil.png',
+      image: '/Soyabean_oil.png',
       ingredients: ['100% Pure Soyabean', 'No GMO', 'Naturally Extracted'],
       benefits: [
         'Rich in polyunsaturated fats',
@@ -367,6 +367,12 @@ export const updatePrice = (productId: string, variantId: string, newPrice: numb
 }
 
 // User operations
+export const getUserByEmail = (email: string) => {
+  const db = getDB()
+  const user = db.users.find((u: User) => u.email === email)
+  return user || null
+}
+
 export const authenticateUser = (email: string, password: string) => {
   const db = getDB()
   const user = db.users.find((u: User) => u.email === email && u.password === password)
@@ -385,6 +391,11 @@ export const getUserById = (id: string) => {
 
 export const createUser = (user: Omit<User, 'id' | 'createdAt'>) => {
   const db = getDB()
+  const existing = db.users.find((u: User) => u.email === user.email)
+  if (existing) {
+    throw new Error('EMAIL_ALREADY_REGISTERED')
+  }
+
   const newUser = { ...user, id: `user-${Date.now()}`, createdAt: new Date() }
   db.users.push(newUser)
   saveDB(db)
