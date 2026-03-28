@@ -5,8 +5,8 @@ import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Leaf, Shield, Droplets, Sprout, Play } from 'lucide-react'
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useState } from 'react'
 import { productThemes } from '@/lib/product-themes'
 import type { ProductType } from '@/lib/product-themes'
@@ -177,12 +177,10 @@ export default function Home() {
       >
         {/* Image Section */}
         <div className="relative h-56 overflow-hidden">
-          <Image
+          <img
             src="/Double_filter_Groundnut_oil.png"  
             alt="Groundnut Oil"
-            fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"
-            priority
           />
 
           {/* Gradient Overlay */}
@@ -233,10 +231,9 @@ export default function Home() {
         style={{ borderTop: `5px solid ${theme.primary}` }}
       >
         <div className="relative h-56 overflow-hidden">
-          <Image
+          <img
             src="/Soyabean_oil.png"
             alt="Refined soyabean Oil"
-            fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
           <div
@@ -279,10 +276,9 @@ export default function Home() {
         style={{ borderTop: `5px solid ${theme.primary}` }}
       >
         <div className="relative h-56 overflow-hidden">
-          <Image
+          <img
             src="/Refined_Groundnut_oil.png"
             alt="Refined Groundnut Oil"
-            fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
           <div
@@ -325,10 +321,9 @@ export default function Home() {
         style={{ borderTop: `5px solid ${theme.primary}` }}
       >
         <div className="relative h-56 overflow-hidden">
-          <Image
+          <img
             src="/Refined_Palm_oil.png"
             alt="Refined Palm Oil"
-            fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
           <div
@@ -371,10 +366,9 @@ export default function Home() {
         style={{ borderTop: `5px solid ${theme.primary}` }}
       >
         <div className="relative h-56 overflow-hidden">
-          <Image
+          <img
             src="/Refined_Cotton_Seed_Oil.png"
             alt="Refined Cotton Seed Oil"
-            fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
           <div
@@ -417,10 +411,9 @@ export default function Home() {
         style={{ borderTop: `5px solid ${theme.primary}` }}
       >
         <div className="relative h-56 overflow-hidden">
-          <Image
+          <img
             src="/Mustard_Oil.png"
             alt="Mustard Oil"
-            fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
           <div
@@ -458,11 +451,10 @@ export default function Home() {
       {/* CTA Section - Enhanced */}
       <section className="relative py-20 md:py-28 overflow-hidden">
   <div className="absolute inset-0">
-    <Image
+    <img
       src="/cta-background.png"
       alt=""
-      fill
-      className="object-cover"
+      className="w-full h-full object-cover"
     />
 
     {/* Brand Gradient Overlay */}

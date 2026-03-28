@@ -12,7 +12,6 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ShoppingCart, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
-import Image from 'next/image'
 
 export default function CustomerOrdersPage() {
   const { user, isAuthenticated, loading: authLoading } = useAuth()
@@ -136,12 +135,10 @@ export default function CustomerOrdersPage() {
                           {order.items.slice(0, 2).map((item, idx) => (
                             <div key={idx} className="flex items-start gap-3 text-sm text-amber-800">
                               <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-md border border-amber-200 bg-white">
-                                <Image
+                                <img
                                   src={getProductImage(item.productId, item.productName)}
                                   alt={item.productName}
-                                  fill
-                                  sizes="48px"
-                                  className="object-cover"
+                                  className="h-full w-full object-cover"
                                 />
                               </div>
                               <div className="min-w-0">

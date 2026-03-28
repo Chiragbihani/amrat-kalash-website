@@ -12,7 +12,6 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Leaf, ShoppingCart } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
 
 export default function Products() {
@@ -66,11 +65,10 @@ export default function Products() {
                 }}
               >
                 <div className="h-48 relative overflow-hidden">
-                  <Image
+                  <img
                     src={product.image}
                     alt={product.name}
-                    fill
-                    className="object-cover transition-transform duration-300 hover:scale-105"
+                    className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
                   />
                   <div 
                     className="absolute inset-0 transition-all"
