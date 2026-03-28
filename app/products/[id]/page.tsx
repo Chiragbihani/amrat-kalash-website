@@ -157,8 +157,18 @@ export default function ProductDetailPage() {
     <main className="min-h-screen flex flex-col">
       <Header />
 
-      <div className="flex-1 py-8" style={{ backgroundColor: theme ? theme.cardBg : '#FEF3C7' }}>
-        <div className="max-w-6xl mx-auto px-4">
+      <div className="flex-1 py-8 relative overflow-hidden">
+
+        {/* Animated Background Layer */}
+        <div
+          className="absolute inset-0 animate-gradient z-0"
+          style={{
+            background: `linear-gradient(270deg, ${theme?.primary || '#FBBF24'}, ${theme?.secondary || '#F97316'}, ${theme?.primary || '#FBBF24'})`,
+            backgroundSize: '400% 400%',
+            opacity: 0.05, // 👈 keeps it subtle
+          }}
+        />
+        <div className="relative z-10 max-w-6xl mx-auto px-4">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 mb-8 text-sm" style={{ color: theme?.secondary || '#B45309' }}>
             <Link href="/" className="hover:underline" style={{ color: theme?.secondary || '#B45309' }}>Home</Link>
@@ -171,15 +181,28 @@ export default function ProductDetailPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             {/* Product Image */}
             <div>
-              <div 
-                className="rounded-lg h-96 flex items-center justify-center sticky top-8"
-                style={{
-                  background: theme ? `linear-gradient(to bottom right, ${theme.primary}, ${theme.secondary})` : 'linear-gradient(to bottom right, #FBBF24, #F97316)',
-                }}
-              >
-                <Droplets className="w-32 h-32 text-white opacity-30" />
-              </div>
-            </div>
+  <div 
+    className="relative rounded-lg h-96 flex items-center justify-center sticky top-8 overflow-hidden"
+  >
+    {/* Animated Gradient Background */}
+    <div
+      className="absolute inset-0 animate-gradient"
+      style={{
+        background: theme
+          ? `linear-gradient(270deg, ${theme.primary}, ${theme.secondary}, ${theme.primary})`
+          : 'linear-gradient(270deg, #FBBF24, #F97316, #FBBF24)',
+        backgroundSize: '400% 400%',
+      }}
+    />
+
+    {/* Image Layer */}
+    <img
+      src={product.image}
+      alt={product.name}
+      className="relative h-full w-100 object-contain transform transition-transform duration-300 hover:scale-105"
+    />
+  </div>
+</div>
 
             {/* Product Details */}
             <div>
