@@ -94,6 +94,7 @@ const productData: Record<string, any> = {
     name: 'Refined Palm Oil',
     type: 'palm',
     description: 'High-quality refined palm oil for commercial and home use',
+    videoUrl: '/Palm_Oil.mp4',
     benefits: [
       'High oxidative stability',
       'Rich in natural tocotrienols',
@@ -143,6 +144,7 @@ const productData: Record<string, any> = {
     name: 'Refined Cotton Seed Oil',
     type: 'cottonseed',
     description: 'Premium refined cotton seed oil with excellent cooking properties',
+    videoUrl: '/Cotton_Seed_Oil.mp4',
     benefits: [
       'High in antioxidants and polyphenols',
       'Supports healthy cholesterol levels',
