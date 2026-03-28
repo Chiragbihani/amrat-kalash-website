@@ -198,7 +198,7 @@ export default function AuthPage() {
                     />
                   </div>
 
-                  <div className="space-y-2">
+                  {/* <div className="space-y-2">
                     <label className="text-sm font-medium text-amber-900">I am a</label>
                     <div className="flex gap-4">
                       <label className="flex items-center gap-2 cursor-pointer">
@@ -222,7 +222,7 @@ export default function AuthPage() {
                         <span className="text-sm text-amber-900">Admin</span>
                       </label>
                     </div>
-                  </div>
+                  </div> */}
 
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-amber-900">Password</label>

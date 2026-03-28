@@ -4,6 +4,7 @@ import React, { useState, useMemo, useEffect } from "react"
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
 import { getProductById, createOrder, updateStock, sendEmail } from '@/lib/db-client'
+import { deliverEmailNotification } from '@/lib/email-client'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
@@ -176,7 +177,7 @@ export default function CheckoutPage() {
 
       // Stock is updated inside `createOrder` now; no per-item update needed here.
 
-      sendEmail({
+      const customerEmailPayload = {
         to: user!.email,
         subject: 'Order Confirmation - Amrat Kalash',
         type: 'customer_order_confirmation',
@@ -187,10 +188,10 @@ export default function CheckoutPage() {
           totalAmount: total,
           address,
         },
-      })
+      } as const
 
-      sendEmail({
-        to: 'admin@amratkalash.com',
+      const adminEmailPayload = {
+        to: 'amrishaagros@gmail.com',
         subject: `New Order Received - ${order.id}`,
         type: 'admin_new_order',
         data: {
@@ -202,9 +203,29 @@ export default function CheckoutPage() {
           totalAmount: total,
           address,
         },
+      } as const
+
+      const [customerEmailResult, adminEmailResult] = await Promise.all([
+        deliverEmailNotification(customerEmailPayload),
+        deliverEmailNotification(adminEmailPayload),
+      ])
+
+      sendEmail({
+        ...customerEmailPayload,
+        deliveryMode: customerEmailResult.deliveryMode,
+        error: customerEmailResult.error,
+      })
+
+      sendEmail({
+        ...adminEmailPayload,
+        deliveryMode: adminEmailResult.deliveryMode,
+        error: adminEmailResult.error,
       })
 
       toast.success('Order placed successfully!')
+      if (!customerEmailResult.ok || !adminEmailResult.ok) {
+        toast.warning('Order was placed, but one or more email notifications could not be delivered.')
+      }
       localStorage.removeItem('amrat_cart')
       try { window.dispatchEvent(new CustomEvent('amrat_cart_updated', { detail: { count: 0 } })) } catch {}
       router.push(`/customer/orders/${order.id}`)

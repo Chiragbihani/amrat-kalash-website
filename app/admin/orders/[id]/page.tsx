@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
 import { getOrderById, updateOrderStatus, sendEmail } from '@/lib/db-client'
+import { deliverEmailNotification } from '@/lib/email-client'
 import type { Order } from '@/lib/db-client'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
@@ -77,8 +78,7 @@ export default function ManageOrderPage() {
       if (updatedOrder) {
         setOrder(updatedOrder)
 
-        // Send customer notification email
-        sendEmail({
+        const customerStatusPayload = {
           to: order.customerEmail,
           subject: `Order Status Update - ${orderId}`,
           type: 'customer_order_status_update',
@@ -88,9 +88,20 @@ export default function ManageOrderPage() {
             status: newStatus,
             totalAmount: order.totalAmount,
           },
+        } as const
+
+        const emailResult = await deliverEmailNotification(customerStatusPayload)
+
+        sendEmail({
+          ...customerStatusPayload,
+          deliveryMode: emailResult.deliveryMode,
+          error: emailResult.error,
         })
 
         toast.success(`Order status updated to ${newStatus}`)
+        if (!emailResult.ok) {
+          toast.warning('Order status was updated, but the customer email could not be delivered.')
+        }
       }
     } catch (error) {
       toast.error('Failed to update order status')

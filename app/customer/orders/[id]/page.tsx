@@ -175,7 +175,7 @@ export default function OrderConfirmationPage() {
 
                   <div className="space-y-3">
                     <p className="text-sm text-amber-700 bg-amber-50 p-3 rounded">
-                      A confirmation email has been sent to {order.customerEmail}
+                      We&apos;ll send order updates to {order.customerEmail} as your order is processed.
                     </p>
                     
                     <Link href="/products" className="block">

@@ -215,8 +215,8 @@ const getDefaultDB = () => {
   const mockUsers: User[] = [
     {
       id: 'admin-1',
-      email: 'admin@amratkalash.com',
-      password: 'admin123',
+      email: 'amrishaagros@gmail.com',
+      password: 'amratkalash123',
       role: 'admin',
       name: 'Admin User',
       createdAt: new Date(),
@@ -484,10 +484,11 @@ export const sendEmail = (email: any) => {
   const db = getDB()
   db.emails.push({
     ...email,
+    deliveryMode: email.deliveryMode ?? 'log-only',
     sentAt: new Date(),
   })
   saveDB(db)
-  console.log('Email sent:', email)
+  console.log('Email logged locally (not delivered to an inbox):', email)
 }
 
 export const getEmails = () => {

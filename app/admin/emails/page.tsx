@@ -43,6 +43,8 @@ export default function EmailsPage() {
     type?: string
     subject: string
     to: string
+    deliveryMode?: string
+    error?: string
     sentAt: string | number
     data?: EmailData
   }
@@ -92,6 +94,9 @@ export default function EmailsPage() {
             </Link>
             <h1 className="text-3xl font-bold text-gray-900">Email Notifications Log</h1>
             <p className="text-gray-600 mt-1">View all customer and admin notifications</p>
+            <p className="text-sm text-amber-700 mt-2">
+              This page shows the app-side email history. Delivery mode will show whether each notification was sent via SMTP, logged only, or failed.
+            </p>
           </div>
 
           <Tabs defaultValue="all" className="w-full">
@@ -121,6 +126,21 @@ export default function EmailsPage() {
                             <Badge className={email.type?.includes('customer') ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'}>
                               {email.type?.includes('customer') ? 'Customer' : 'Admin'}
                             </Badge>
+                            <Badge
+                              className={
+                                email.deliveryMode === 'smtp'
+                                  ? 'bg-green-100 text-green-800'
+                                  : email.deliveryMode === 'failed'
+                                    ? 'bg-red-100 text-red-800'
+                                    : 'bg-amber-100 text-amber-800'
+                              }
+                            >
+                              {email.deliveryMode === 'smtp'
+                                ? 'SMTP Sent'
+                                : email.deliveryMode === 'failed'
+                                  ? 'Failed'
+                                  : 'Log Only'}
+                            </Badge>
                           </div>
                           <p className="text-sm text-gray-600">To: {email.to}</p>
                         </div>
@@ -129,6 +149,9 @@ export default function EmailsPage() {
                     </CardHeader>
                     <CardContent className="p-6">
                       <div className="bg-gray-50 p-4 rounded-lg text-sm text-gray-700 max-h-64 overflow-y-auto">
+                        {email.error && (
+                          <p className="text-red-600 mb-3 font-medium">Delivery error: {email.error}</p>
+                        )}
                         <pre className="whitespace-pre-wrap font-mono text-xs">
                           {JSON.stringify(email.data, null, 2)}
                         </pre>
