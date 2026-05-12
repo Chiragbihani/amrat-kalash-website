@@ -87,6 +87,7 @@ function AuthMenu() {
 export function Header() {
   const { isAuthenticated, user } = useAuth()
   const [cartCount, setCartCount] = useState(0)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -153,11 +154,34 @@ export function Header() {
 
           <AuthMenu />
 
-          <Button variant="ghost" size="icon" className="md:hidden">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="md:hidden"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
             <Menu className="w-5 h-5 text-[#33382D]" />
           </Button>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-white border-t border-[#757871]/20">
+          <nav className="max-w-7xl mx-auto px-6 py-4 flex flex-col gap-4">
+            {['Home', 'Products', 'About', 'Contact'].map((item) => (
+              <Link
+                key={item}
+                href={`/${item === 'Home' ? '' : item.toLowerCase()}`}
+                className="text-[#33382D] hover:text-[#404437] text-sm font-medium"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {item}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      )}
     </header>
   )
 }
