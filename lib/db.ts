@@ -191,7 +191,7 @@ const getDefaultDB = () => {
       name: 'Refined Palm Oil',
       type: 'palm',
       description: 'Sustainable refined palm oil with rich golden color and smooth texture',
-      image: '/Refined_Palm_Oil.png',
+      image: '/Refined_Palm_oil.png',
       ingredients: ['100% Pure Palm Fruit', 'Sustainably Sourced', 'Naturally Golden'],
       benefits: [
         'Rich in beta-carotene',
