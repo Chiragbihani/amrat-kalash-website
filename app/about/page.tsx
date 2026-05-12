@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { Card, CardContent } from '@/components/ui/card'
@@ -19,12 +18,10 @@ export default function About() {
   to-[#404437]/40 
   z-10" 
 />
-<Image
+<img
   src="/hero-image.png"
   alt="Amrat Kalash Hero"
-  fill
-  className="object-cover opacity-30"
-  priority
+  className="absolute inset-0 h-full w-full object-cover opacity-30"
 />
         <div className="relative z-20 h-full flex items-center">
           <div className="max-w-6xl mx-auto px-4 w-full">
@@ -74,11 +71,10 @@ export default function About() {
               </div>
             </div>
             <div className="relative h-[500px] rounded-2xl overflow-hidden shadow-lg bg-amber-50">
-  <Image
+  <img
     src="/About.png"
     alt="Amrat Kalash Story"
-    fill
-    className="object-contain"
+    className="absolute inset-0 h-full w-full object-contain"
   />
 </div>
           </div>
