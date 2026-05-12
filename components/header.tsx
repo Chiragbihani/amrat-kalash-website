@@ -28,7 +28,7 @@ function AuthMenu() {
   if (!isAuthenticated) {
     return (
       <Link href="/auth">
-        <Button className="bg-[#33382D] hover:bg-[#404437] hidden sm:inline-flex">
+        <Button className="bg-[#33382D] hover:bg-[#404437] inline-flex">
           Login
         </Button>
       </Link>
